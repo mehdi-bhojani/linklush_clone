@@ -63,16 +63,16 @@ const Header = () => {
         </a>
         <nav className="hidden lg:block">
           <ul className="flex gap-6">
-            <li>
+            <li className="hover:font-semibold">
               <a href="features.html">Features</a>
             </li>
-            <li>
+            <li className="hover:font-semibold">
               <a href="pricing.html">Pricing</a>
             </li>
-            <li>
+            <li className="hover:font-semibold">
               <a href="blog.html">Blog</a>
             </li>
-            <li>
+            <li className="hover:font-semibold">
               <a href="contact.html">Contact</a>
             </li>
           </ul>
