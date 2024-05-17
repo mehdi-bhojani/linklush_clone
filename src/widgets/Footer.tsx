@@ -4,8 +4,8 @@ const Footer = () => {
     return (
 
         <footer>
-            <div className=' min-w-[140px] '>
-                <div className="  pt-10 pb-12 md:pt-12 md:pb-14 lg:pt-14 lg:pb-16 border-y">
+            <div className="container" >
+                <div className="  pt-10 pb-12 md:pt-12 md:pb-14 lg:pt-14 lg:pb-16 border-y ">
                     <div className=" grid grid-rows-[auto] grid-cols-1 lg:grid-cols-[minmax(auto,336px)_minmax(auto,420px)] justify-between gap-12 items-center">
                         <div>
                             <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="20.94 377.01 959.17 236.01" className="w-auto h-8 mb-4 lg:mb-6">

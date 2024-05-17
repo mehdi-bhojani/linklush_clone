@@ -95,45 +95,60 @@ const Header = () => {
               <div aria-expanded="false" className="aria-expanded:rotate-[135deg] aria-expanded:translate-y-2"></div>
               <div aria-expanded="false" className="aria-expanded:rotate-45 aria-expanded:-translate-y-2"></div>
             </div>
-            {/*  <aside style="pointer-events:none" className="w-screen h-screen absolute top-[90px] left-0 right-0 bottom-0 overflow-hidden z-50">
-                <div aria-expanded="false" className="px-6 py-8 border-y container-colors absolute top-0 left-0 right-0 -translate-y-[400px] aria-expanded:translate-y-0 transform-gpu transition-transform duration-400 ease-in-out">
-                  <nav>
-                    <ul className="flex flex-col gap-4">
-                      <li>
-                        <a href="features.html">Features</a>
-                      </li>
-                      <li>
-                        <a href="pricing.html">Pricing</a>
-                      </li>
-                      <li>
-                        <a href="blog.html">Blog</a>
-                      </li>
-                      <li>
-                        <a href="contact.html">Contact</a>
-                      </li>
-                    </ul>
-                  </nav>
-                  <div className="flex flex-col gap-4 mt-4">
-                    <a
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 border border-zinc-200 bg-white shadow-sm hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 h-9 px-4 py-2"
-                      href="login.html"
+            {/* <aside className="w-screen h-screen absolute top-[90px] left-0 right-0 bottom-0 overflow-hidden z-50 pointer-events-none">
+              <div
+                aria-expanded="false"
+                className="px-6 py-8 border-y container-colors absolute top-0 left-0 right-0 -translate-y-[400px] transform-gpu transition-transform duration-[400ms] ease-in-out"
+              >
+                <nav>
+                  <ul className="flex flex-col gap-4">
+                    <li>
+                      <a href="features.html">Features</a>
+                    </li>
+                    <li>
+                      <a href="pricing.html">Pricing</a>
+                    </li>
+                    <li>
+                      <a href="blog.html">Blog</a>
+                    </li>
+                    <li>
+                      <a href="contact.html">Contact</a>
+                    </li>
+                  </ul>
+                </nav>
+                <div className="flex flex-col gap-4 mt-4">
+                  <a
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 border border-zinc-200 bg-white shadow-sm hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 h-9 px-4 py-2"
+                    href="login.html"
+                  >
+                    Login
+                  </a>
+                  <a
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-9 px-4 py-2"
+                    href="register.html"
+                  >
+                    Get started{" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="tabler-icon tabler-icon-arrow-right ml-2"
                     >
-                      Login
-                    </a>
-                    <a
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-9 px-4 py-2"
-                      href="register.html"
-                    >
-                      Get started{" "}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="tabler-icon tabler-icon-arrow-right ml-2">
-                        <path d="M5 12l14 0"></path>
-                        <path d="M13 18l6 -6"></path>
-                        <path d="M13 6l6 6"></path>
-                      </svg>
-                    </a>
-                  </div>
+                      <path d="M5 12l14 0"></path>
+                      <path d="M13 18l6 -6"></path>
+                      <path d="M13 6l6 6"></path>
+                    </svg>
+                  </a>
                 </div>
-              </aside> */}
+              </div>
+            </aside> */}
+
           </div>
         </div>
       </div>
