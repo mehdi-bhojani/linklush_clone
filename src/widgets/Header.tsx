@@ -1,10 +1,11 @@
+import Link from "next/link";
 import React from "react";
 
 const Header = () => {
   return (
     <header className="absolute top-0 left-0 right-0 py-6 lg:py-8 z-50 ">
       <div className="xs:px-6  container flex justify-between items-center">
-        <a title="Linklush" href="index.html">
+        <Link title="" href="/" >
           <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="20.94 377.01 959.17 236.01" className="h-8 mr-5">
             <title>Linklush</title>
             <path className="cls-1" d="M298.6,533.53H272.77V392.92H298.6Z"></path>
@@ -60,20 +61,28 @@ const Header = () => {
               ></path>
             </g>
           </svg>
-        </a>
+        </Link>
         <nav className="hidden lg:block">
           <ul className="flex gap-6">
             <li className="hover:font-semibold">
-              <a href="features.html">Features</a>
+              <Link href="/features">
+                Features
+              </Link>
             </li>
             <li className="hover:font-semibold">
-              <a href="pricing.html">Pricing</a>
+              <Link href="/pricing">
+                Pricing
+              </Link>
             </li>
             <li className="hover:font-semibold">
-              <a href="blog.html">Blog</a>
+              <Link href="/blog">
+                Blog
+              </Link>
             </li>
             <li className="hover:font-semibold">
-              <a href="contact.html">Contact</a>
+              <Link href="/contact">
+                Contact
+              </Link>
             </li>
           </ul>
         </nav>
@@ -152,7 +161,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 
