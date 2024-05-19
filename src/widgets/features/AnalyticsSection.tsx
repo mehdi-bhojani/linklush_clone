@@ -9,7 +9,7 @@ import statistic from "@/assets/statistics-chart.webp"
 import newOrder from "@/assets/new-orders-chart.webp"
 
 
-function AnalyticsForFeaturePage() {
+function AnalyticsSection() {
 
 
 
@@ -56,4 +56,4 @@ function AnalyticsForFeaturePage() {
     );
 }
 
-export default AnalyticsForFeaturePage;
+export default AnalyticsSection;

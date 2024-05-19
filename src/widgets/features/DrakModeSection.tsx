@@ -5,7 +5,7 @@ import darkMode from "@/assets/dark-mode-profile.webp"
 import ProfileSection from "@/assets/profile-sections.webp"
 
 
-function SectionAndDrakModeForFeaturePage() {
+function DrakModeSection() {
     return (
         <section>
             <div className="container py-16 xs:py-20 md:py-[100px] lg:pt-[120px] border-b">
@@ -42,4 +42,4 @@ function SectionAndDrakModeForFeaturePage() {
     );
 }
 
-export default SectionAndDrakModeForFeaturePage;
+export default DrakModeSection;

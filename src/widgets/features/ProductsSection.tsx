@@ -4,7 +4,7 @@ import Image from 'next/image';
 import statistic from "@/assets/statistics-chart.webp"
 import newOrder from "@/assets/new-orders-chart.webp"
 
-const ProductsSectionForFeaturePage = () => {
+const ProductsSection = () => {
     return (
         <section>
             <div className="container py-16 xs:py-20 md:py-[100px] lg:pt-[120px] border-b">
@@ -43,4 +43,4 @@ const ProductsSectionForFeaturePage = () => {
     );
 }
 
-export default ProductsSectionForFeaturePage;
+export default ProductsSection;

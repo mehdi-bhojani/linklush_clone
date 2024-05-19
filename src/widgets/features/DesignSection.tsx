@@ -4,7 +4,7 @@ import gradient2 from "@/assets/gradient-2.webp"
 import front from "@/assets/advanced-design-mode.webp"
 import linklish from "@/assets/linklush-themes.webp"
 
-function DesignSectionForFeaturePage() {
+function DesignSection() {
     return (
         <div>
             <section><div className="container py-16 xs:py-20 md:py-[100px] lg:pt-[120px] border-b">
@@ -55,4 +55,4 @@ function DesignSectionForFeaturePage() {
     );
 }
 
-export default DesignSectionForFeaturePage;
+export default DesignSection;

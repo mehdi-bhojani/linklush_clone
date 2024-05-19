@@ -4,14 +4,13 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google"
 
 import { cn } from "@/lib/utils"
-import Footer from "@/widgets/Footer";
-import Header from "@/widgets/Header";
+import Footer from "@/widgets/layout/Footer";
+import Header from "@/widgets/layout/Header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 })
-
 
 
 export const metadata: Metadata = {

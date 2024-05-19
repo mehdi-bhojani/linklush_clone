@@ -6,7 +6,7 @@ import statistic from "@/assets/statistics-chart.webp"
 
 
 
-function SubscribeSectionForFeaturePage() {
+function SubscribeSection() {
     return (
         <section>
             <div className="container py-16 xs:py-20 md:py-[100px] lg:pt-[120px] border-b">
@@ -58,4 +58,4 @@ function SubscribeSectionForFeaturePage() {
     );
 }
 
-export default SubscribeSectionForFeaturePage;
+export default SubscribeSection;

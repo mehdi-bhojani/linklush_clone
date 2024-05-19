@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Analytics from "@/assets/analytics-chart.webp"
 import HtmlCode from "@/assets/html-code.webp"
 
-function SeoSectionForFeaturePage() {
+function SeoSection() {
     return (
         <section>
             <div className="container pt-16 xs:pt-20 lg:pt-[120px] pb-[100px] xs:pb-[120px] md:pt-[100px] md:pb-[150px]">
@@ -53,4 +53,4 @@ function SeoSectionForFeaturePage() {
     );
 }
 
-export default SeoSectionForFeaturePage;
+export default SeoSection;

@@ -6,7 +6,7 @@ import contactOption from "@/assets/three-content-options.webp"
 import visitorStatistic from "@/assets/visitors-statistics-chart.webp"
 
 
-function FearuresSectionForFeaturePage() {
+function FearuresSection() {
     return (
         <section>
             <div className='container'>
@@ -90,4 +90,4 @@ function FearuresSectionForFeaturePage() {
     );
 }
 
-export default FearuresSectionForFeaturePage;
+export default FearuresSection;
