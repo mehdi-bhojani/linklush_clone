@@ -64,19 +64,33 @@ function FaqsSection() {
                     <p className="text-gray-700 leading-7">Got Questions? We've Got Answers! Explore our FAQs to find quick answers to common questions about Linklush</p>
                 </div>
 
-
-                <div className='mb-10 md:mb-12'>
-                    {accordionItems.map((item) => {
-                        return (<Accordion type="single" collapsible >
-                            <AccordionItem value="item-1">
-                                <AccordionTrigger className='font-[18px] '>{item.title}</AccordionTrigger>
-                                <AccordionContent>
-                                    {item.content}
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>)
-                    })}
+                <div className='flex gap-10 container flex-col lg:flex-row    '>
+                    <div className='mb-10 md:mb-12  '>
+                        {accordionItems.map((item) => {
+                            return (<Accordion type="single" collapsible >
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger className='font-[18px] '>{item.title}</AccordionTrigger>
+                                    <AccordionContent>
+                                        {item.content}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>)
+                        })}
+                    </div>
+                    <div className='mb-10 md:mb-12 flex-1'>
+                        {accordionItems.map((item) => {
+                            return (<Accordion type="single" collapsible >
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger className='font-[18px] '>{item.title}</AccordionTrigger>
+                                    <AccordionContent>
+                                        {item.content}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>)
+                        })}
+                    </div>
                 </div>
+
 
                 {/* button */}
                 <a className="items-center  justify-center whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-9 px-4 py-2 flex w-fit mx-auto" href="/register">Get started <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="tabler-icon tabler-icon-arrow-right ml-2">

@@ -30,7 +30,12 @@ export default function RootLayout({
         fontSans.variable
       )}>
         <Header />
-        {children}
+
+
+        <main className="h-screen flex flex-col items-center justify-center">
+          {children}
+        </main>
+
         {/*  <Footer /> */}
       </body>
     </html>

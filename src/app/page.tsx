@@ -8,13 +8,18 @@ import FaqsSection from "@/widgets/home/FaqsSection";
 
 export default function Home() {
   return (
-    <main>
+    <>
+
+
+
+      {/* 
       <HeroSection />
-      <FeaturesSection />
-      <GrowAudienceSection />
-      <UnderstandAudienceSection />
+      <FeaturesSection /> */}
+
+      {/*  {<GrowAudienceSection />} */}  {/* problem */}
+      {/*  <UnderstandAudienceSection />
       <IntegrationSection />
-      <FaqsSection />
-    </main>
+      <FaqsSection /> */}
+    </>
   );
 }
