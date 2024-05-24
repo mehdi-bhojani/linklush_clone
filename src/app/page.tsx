@@ -12,11 +12,11 @@ export default function Home() {
 
 
 
-      {/* 
-      <HeroSection />
+
+      {/*  <HeroSection />
       <FeaturesSection /> */}
 
-      {/*  {<GrowAudienceSection />} */}  {/* problem */}
+      {/*     {<GrowAudienceSection />} */}  {/* problem */}
       {/*  <UnderstandAudienceSection />
       <IntegrationSection />
       <FaqsSection /> */}

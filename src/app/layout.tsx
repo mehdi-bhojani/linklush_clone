@@ -29,18 +29,14 @@ export default function RootLayout({
         "min-h-screen bg-background font-sans antialiased",
         fontSans.variable
       )}>
-        <Header />
-
-
-        <main className="h-screen flex flex-col items-center justify-center">
+        {/* <Header /> */}
+        <main >
           {children}
         </main>
 
         {/*  <Footer /> */}
       </body>
     </html>
-
-
 
   );
 }
