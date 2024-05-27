@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
+import { PluginAPI } from "tailwindcss/types/config";
 const { fontFamily } = require("tailwindcss/defaultTheme");
-const config = {
+
+const config: Config = {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
@@ -16,7 +18,6 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
-
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,7 +74,59 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addComponents }: PluginAPI) {
+      addComponents({
+        ".admincontainer": {
+          width: "100%",
+          paddingLeft: "1rem",
+          paddingRight: "1rem",
+          marginLeft: "auto",
+          marginRight: "auto",
+
+          "@screen sm": {
+            maxWidth: "640px",
+          },
+          "@screen md": {
+            maxWidth: "768px",
+          },
+          "@screen lg": {
+            maxWidth: "1024px",
+          },
+          "@screen xl": {
+            maxWidth: "1280px",
+          },
+          "@screen 2xl": {
+            maxWidth: "1500px",
+          },
+        },
+        ".adminheadercontainer": {
+          width: "100%",
+          paddingLeft: "0px",
+          paddingRight: "0px",
+          marginLeft: "auto",
+          marginRight: "auto",
+
+          "@screen sm": {
+            maxWidth: "680px",
+          },
+          "@screen md": {
+            maxWidth: "808px",
+          },
+          "@screen lg": {
+            maxWidth: "1064px",
+          },
+          "@screen xl": {
+            maxWidth: "1320px",
+          },
+          "@screen 2xl": {
+            maxWidth: "1540px",
+          },
+        },
+      });
+    },
+  ],
 } satisfies Config;
 
 export default config;
