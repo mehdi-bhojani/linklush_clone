@@ -1,19 +1,17 @@
-import Card from '@/components/Admin/Card';
-import PageTitle from '@/components/Admin/PageTitle';
 import React from 'react';
+import PageTitle from '@/components/Admin/Dashboard/PageTitle';
+import Card from '@/components/Admin/Dashboard/Card';
+import { cardProps } from '@/components/Admin/Dashboard/Card';
 import {
     Link2,
     ShoppingBag,
     Video,
 } from "lucide-react";
-import { cardProps } from '@/components/Admin/Card';
-import UserProfile from '@/components/Admin/UserProfile';
-import { UserProfileProps } from '@/components/Admin/UserProfile';
-import { Button } from '@/components/ui/button';
 
 
 
-function Admin() {
+
+function page() {
     const cardContent: cardProps[] = [
         { icon: Link2, label: 'Add your links', linkLabel: 'Go to Links', link: "/admin/links" },
         { icon: ShoppingBag, label: 'Connect your store', linkLabel: 'Go to Products', link: "/admin/products" },
@@ -22,7 +20,6 @@ function Admin() {
     ];
 
     return (
-
         <section className='flex-1 w-full  '>
             <div className=''>
                 <PageTitle tittle='Your Link In Bio Platform' />
@@ -41,10 +38,7 @@ function Admin() {
             </div>
 
         </section>
-
-
-
     );
 }
 
-export default Admin;
+export default page;
