@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { Value } from "@radix-ui/react-select"
-import GoogleSignInButton from "./GoogleSignInButton"
+import GoogleSignInButton from "./GoogleButton"
 
 
 const FormSchema = z.object({
