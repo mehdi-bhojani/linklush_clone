@@ -1,12 +1,11 @@
 "use client"
-
+import { Toaster } from "react-hot-toast"
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import SideNavBar from '@/components/Admin/SideNavbar/SideNavBar';
 import UserProfile, { UserProfileProps } from '@/components/Admin/UserProfile/UserProfile';
 import UserProfileLogo from '@/components/Admin/UserProfile/UserProfileLogo';
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
-
 
 import "../globals.css";
 import { Inter as FontSans } from "next/font/google"
@@ -50,7 +49,7 @@ export default function RootLayout({
         "min-h-screen bg-background font-sans antialiased",
         fontSans.variable
       )}>
-
+        <Toaster />
         <div className="min-h-screen flex flex-col">
 
           <header className=" adminheadercontainer hidden md:block  border-b ">
@@ -82,7 +81,6 @@ export default function RootLayout({
 
               <section className="flex-1 md:border-l md:block p-6">
                 <UserProfile userName={userProfileData.userName} buttonText={"Learn more"} buttonUrl={"/"} />
-                <UserProfileLogo />
               </section>
             </main>
 

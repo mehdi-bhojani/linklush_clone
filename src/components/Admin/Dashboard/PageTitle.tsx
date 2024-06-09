@@ -11,7 +11,7 @@ type Props = {
 
 const PageTitle = ({ tittle, className }: Props) => {
     return (
-        <h1 className={cn("text-2xl font-semibold", className)}>{tittle}</h1>
+        <h1 className={cn("text-lg font-semibold sm:text-xl", className)}>{tittle}</h1>
     );
 }
 

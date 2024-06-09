@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import PageTitle from '@/components/Admin/Dashboard/PageTitle';
 import Card from '@/components/Admin/Dashboard/Card';

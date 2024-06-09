@@ -1,30 +1,92 @@
-import React from 'react';
-import { Button } from '../../ui/button';
-import Link from 'next/link';
-
-// Define the props type with PascalCase naming convention
+import React, { useEffect } from "react";
+import { Button } from "../../ui/button";
+import Link from "next/link";
+import { useAtom } from "jotai";
+import {
+  appearanceAtom,
+  newAppearanceAtom,
+  updateAppearanceAtom,
+} from "../../../lib/store";
+import UserProfileLogo from "./UserProfileLogo";
+import { getTheme } from "@/lib/theme";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export type UserProfileProps = {
-    userName: string;
-    buttonText: string
-    buttonUrl: string
+  userName: string;
+  buttonText: string;
+  buttonUrl: string;
 };
 
-const UserProfile: React.FC<UserProfileProps> = ({ userName, buttonText, buttonUrl }) => {
-    const userInitial = userName.charAt(0).toUpperCase();
-    return (
-        <div className=' bg-slate-100 flex flex-col items-center justify-center pb-4'>
-            <div className="flex flex-col space-y-1.5 text-center p-3 sm:p-4 ">
-                <span className="flex items-center justify-center h-20 w-20 mx-auto border bg-slate-100 dark:bg-zinc-800 rounded-full">
-                    <span>{userInitial}</span>
-                </span>
-                <h3 className="font-semibold tracking-tight text-lg">{userName}</h3>
-            </div>
-            <Link href={buttonUrl}>  <Button className=''>{buttonText}</Button></Link>
+const UserProfile: React.FC<UserProfileProps> = ({
+  userName,
+  buttonText,
+  buttonUrl,
+}) => {
+  const [appearance, setAppearance] = useAtom(appearanceAtom);
+  const [, setNewAppearance] = useAtom(newAppearanceAtom);
+  const [, updateAppearance] = useAtom(updateAppearanceAtom);
+
+  useEffect(() => {
+    const newAppearance = {
+      id: 1,
+      userid: 1,
+      name: "Random Name",
+      description: "Random Description",
+      avatar: "",
+      infoButtonEnable: true,
+      infoButtonText: "Learn More",
+      infoButtonLink: "random-link",
+      font: "Arial",
+      theme: "light",
+      bgColor: "",
+      bgImage: "",
+      hideBranding: false,
+      lastbackground: "theme",
+    };
+    setNewAppearance(newAppearance);
+    updateAppearance(newAppearance);
+  }, [setNewAppearance, updateAppearance]);
+
+  let { foreground, background, text } = getTheme(appearance.theme);
+
+  if (appearance.lastbackground === "theme") {
+  } else if (appearance.lastbackground === "color") {
+    background = appearance.bgColor;
+  } else {
+    background = appearance.bgImage
+      ? `url('/backgrounds/${appearance.bgImage}')`
+      : "";
+  }
+
+  const avatarUrl = (appearance.avatar)?`/avatars/${appearance.avatar}`:'';
+
+  return (
+    <>
+      <div
+        className="flex flex-col items-center justify-center pb-4"
+        style={{ background, color: text }}
+      >
+        <div className="flex flex-col items-center justify-center space-y-1.5 text-center p-3 sm:p-4">
+            <Avatar className="w-20 h-20">
+              <AvatarImage src={avatarUrl} alt="@shadcn" style={{ background: foreground, color: text }}/>
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          <h3 className="font-semibold tracking-tight text-lg">
+            {appearance.name || userName}
+          </h3>
+            <span className="text-sm">{appearance.description || "Random Description"}</span>
         </div>
-
-
-    );
-}
+        <Link href={appearance.infoButtonLink || buttonUrl}>
+          {appearance.infoButtonEnable && (
+            <Button style={{ background: foreground, color: text }}>
+              {appearance.infoButtonText || buttonText}
+            </Button>
+          )}
+        </Link>
+      </div>
+      {!appearance.hideBranding && <UserProfileLogo />}
+    </>
+  );
+};
 
 export default UserProfile;
