@@ -1,6 +1,6 @@
 
-import BlogPost from '@/widgets/blog/BlogPost';
-import BlogSubstribtion from '@/widgets/blog/BlogSubstribtion';
+import BlogPost from '@/components/website/blog/BlogPost';
+import BlogSubstribtion from '@/components/website/blog/BlogSubstribtion';
 import React from 'react';
 
 function page() {

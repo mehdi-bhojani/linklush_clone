@@ -1,11 +1,11 @@
-import AnalyticsSection from '@/widgets/features/AnalyticsSection';
-import DesignSection from '@/widgets/features/DesignSection';
-import DrakModeSection from '@/widgets/features/DrakModeSection';
-import FearuresSection from '@/widgets/features/FearuresSection';
-import ProductsSection from '@/widgets/features/ProductsSection';
-import ProtectAndAnimate from '@/widgets/features/ProtectAndAnimate';
-import SeoSection from '@/widgets/features/SeoSection';
-import SubscribeSection from '@/widgets/features/SubscribeSection';
+import AnalyticsSection from '@/components/website/features/AnalyticsSection';
+import DesignSection from '@/components/website/features/DesignSection';
+import DrakModeSection from '@/components/website/features/DrakModeSection';
+import FearuresSection from '@/components/website/features/FearuresSection';
+import ProductsSection from '@/components/website/features/ProductsSection';
+import ProtectAndAnimate from '@/components/website/features/ProtectAndAnimate';
+import SeoSection from '@/components/website/features/SeoSection';
+import SubscribeSection from '@/components/website/features/SubscribeSection';
 import React from 'react';
 
 function page() {

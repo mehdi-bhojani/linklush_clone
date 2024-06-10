@@ -1,5 +1,5 @@
-import PlainComparison from '@/widgets/pricing/PlainComparison';
-import PricingSection from '@/widgets/pricing/PricingSection';
+import PlainComparison from '@/components/website/pricing/PlainComparison';
+import PricingSection from '@/components/website/pricing/PricingSection';
 import React from 'react';
 
 function page() {

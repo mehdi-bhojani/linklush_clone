@@ -1,4 +1,4 @@
-import UpgradePageComponent from '@/widgets/upgrade/UpgradePageComponent';
+import UpgradePageComponent from '@/components/website/upgrade/UpgradePageComponent';
 import React from 'react';
 
 function page() {
