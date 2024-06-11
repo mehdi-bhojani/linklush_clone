@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSkelton from "./ThemeSkelton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 interface ThemeSkeletonProps {
   foreground: string;
@@ -19,31 +19,38 @@ interface ThemeSkeletonProps {
 }
 import { useAtom } from "jotai";
 import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import useAppearanceData from "@/shared/hooks/useAppearenceData";
+import { saveApearance } from "@/actions/save.appearance";
 
 export function TheTabs() {
+  const {data, loading} = useAppearanceData();
   let [currTheme, setCurrentTheme] = useState("Clean Gray");
   let [updateDisabled, setupdateDisabled] = useState(true);
+  const [appearance, setAppearance] = useAtom(appearanceAtom);
 
-  const handleSubmit = () => {
+  useEffect(()=>{
+    setCurrentTheme((data as any)[0]?.theme);
+  },[data])
+
+  const handleSubmit = async() => {
         //update atom
     const newAppearance = {
         ...appearance,
         theme: currTheme,
         lastbackground: "theme",
     };
-    updateAppearance(newAppearance);    
+    await setAppearance(newAppearance);    
+    await saveApearance(newAppearance);
     toast.success(`Theme updated to ${currTheme}`);
     setupdateDisabled(true);
   };
 
-  const handleThemeChange = (theme: string) => {
+  const handleThemeChange = async(theme: string) => {
     setCurrentTheme(theme);
     setupdateDisabled(false);
   };
 
-  const [appearance, setAppearance] = useAtom(appearanceAtom);
-  const [, updateAppearance] = useAtom(updateAppearanceAtom);
-
+  
   return (
     <Tabs defaultValue="Basic" className="w-full">
       <div className="flex flex-row gap-2 flex-start bg-slate-100 p-2 items-center">

@@ -12,14 +12,22 @@ import { Label } from "@/components/ui/label";
 import { ColorPicker } from "./ColorPicker";
 import { useAtom } from "jotai";
 import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import useAppearanceData from "@/shared/hooks/useAppearenceData";
+import { saveApearance } from "@/actions/save.appearance";
 
 export const OtherForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const {data,loading} = useAppearanceData();
   const [color, setColor] = useState("#0f0f0f");
   const [updateDiabled, setUpdateDisabled] = useState(true);
 
+  useEffect(()=>{
+    setColor((data as any)[0]?.bgColor);
+    ((data as any)[0]?.bgImage != "") ? setPreviewUrl('/backgrounds/'+(data as any)[0]?.bgImage) : "";
+  },[data]);
+  
   const handleColorChange = (newColor: string) => {
     setUpdateDisabled(false);
     setColor(newColor);
@@ -45,9 +53,11 @@ export const OtherForm = () => {
         bgImage: bgImg,
         lastbackground: "image",
       };
-      updateAppearance(newAppearance);
 
+      
       if (result) {
+        await updateAppearance(newAppearance);
+        await saveApearance(newAppearance);
         toast.success("File uploaded successfully");
       } else {
         toast.error("Failed to upload file");
@@ -60,7 +70,8 @@ export const OtherForm = () => {
         bgColor: color,
         lastbackground: "color",
       };
-      updateAppearance(newAppearance);
+      await updateAppearance(newAppearance);
+      await saveApearance(newAppearance);
       toast.success("Color updated successfully");
       setUpdateDisabled(true);
     }

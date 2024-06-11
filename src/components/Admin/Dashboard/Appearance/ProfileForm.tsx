@@ -4,7 +4,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,48 +15,44 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { useAtom } from "jotai";
-import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import { Appearance, appearanceAtom } from "@/lib/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-
-const FormSchema = z.object({
-  publicName: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  description: z
-    .string()
-    .min(10, {
-      message: "Description must be at least 10 characters.",
-    })
-    .max(300, {
-      message: "Description must be at most 300 characters.",
-    })
-    .optional(),
-  infoButtonEnable: z.boolean().optional(),
-  infoButtonText: z
-    .string()
-    .min(2, {
-      message: "Button text must be at least 2 characters.",
-    })
-    .optional(),
-  infoButtonLink: z
-    .string()
-    .url({
-      message: "Please enter a valid URL.",
-    })
-    .optional(),
-});
+import useAppearanceData from "@/shared/hooks/useAppearenceData";
+import { profileFormSchema } from "@/lib/formSchema/appearance.schema";
+import { saveApearance } from "@/actions/save.appearance";
 
 export const ProfileForm = () => {
-  const [preview, setPreview] = useState("");
   const [appearance, setAppearance] = useAtom(appearanceAtom);
-  const [, updateAppearance] = useAtom(updateAppearanceAtom);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+  const { data, loading } = useAppearanceData();
+  const [updateDisabled, setupdateDisabled] = useState(true);
 
-  const formMethods = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  useEffect(() => {
+    formMethods.setValue("publicName", (data as any)[0]?.name);
+    formMethods.setValue("description", (data as any)[0]?.description);
+    setChecked((data as any)[0]?.infoButtonEnable);
+    formMethods.setValue("infoButtonText", (data as any)[0]?.infoButtonText);
+    formMethods.setValue("infoButtonLink", (data as any)[0]?.infoButtonLink);
+    (data as any)[0]?.avatar != ""
+      ? setPreviewUrl((data as any)[0]?.avatar)
+      : "";
+  }, [data]);
+
+  const defaultValues = {
+    publicName: "",
+    description: "",
+    infoButtonEnable: true,
+    infoButtonText: "",
+    infoButtonLink: "",
+  };
+
+  const formMethods = useForm<z.infer<typeof profileFormSchema>>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues,
   });
 
   const onSubmit = async (data: any) => {
@@ -76,41 +71,47 @@ export const ProfileForm = () => {
           const newAppearance = {
             ...appearance,
             name: data.publicName,
-            description: data.description || appearance.description,
+            description: data.description || data.description,
             avatar: uniqueFileName,
             infoButtonEnable:
               data.infoButtonEnable !== undefined
                 ? data.infoButtonEnable
-                : appearance.infoButtonEnable,
-            infoButtonText: data.infoButtonText || appearance.infoButtonText,
-            infoButtonLink: data.infoButtonLink || appearance.infoButtonLink,
+                : data.infoButtonEnable,
+            infoButtonText: data.infoButtonText || data.infoButtonText,
+            infoButtonLink: data.infoButtonLink || data.infoButtonLink,
           };
 
-          updateAppearance(newAppearance);
+          await setAppearance(newAppearance);
+          await saveApearance(newAppearance);
           toast.success("File uploaded successfully");
+        
         } else {
           toast.error("Failed to upload file");
+          
         }
       } catch (error) {
         console.error("Error uploading file:", error);
         toast.error("Failed to upload file");
+        
       }
     } else {
       const newAppearance = {
         ...appearance,
         name: data.publicName,
-        description: data.description || appearance.description,
+        description: data.description || data.description,
+        avatar: "",
         infoButtonEnable:
           data.infoButtonEnable !== undefined
             ? data.infoButtonEnable
-            : appearance.infoButtonEnable,
-        infoButtonText: data.infoButtonText || appearance.infoButtonText,
-        infoButtonLink: data.infoButtonLink || appearance.infoButtonLink,
+            : data.infoButtonEnable,
+        infoButtonText: data.infoButtonText || data.infoButtonText,
+        infoButtonLink: data.infoButtonLink || data.infoButtonLink,
       };
-
-      updateAppearance(newAppearance);
+      await saveApearance(newAppearance);
+      await setAppearance(newAppearance);
       toast.success("Submission Successful");
     }
+    setupdateDisabled(true);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,12 +123,11 @@ export const ProfileForm = () => {
   };
 
   const handleRemoveImage = () => {
-    const newAppearance = {
-      ...appearance,
-      avatar: "",
-    };
-    updateAppearance(newAppearance);
-    toast.success("Image removed successfully");
+    // const newAppearance = {
+    //   ...appearance,
+    //   avatar: "",
+    // };
+    // setAppearance(newAppearance);
     setFile(null);
     setPreviewUrl(null);
   };
@@ -155,6 +155,7 @@ export const ProfileForm = () => {
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className="w-full space-y-6"
+        onChange={() => setupdateDisabled(false)}
       >
         <FormField
           name="publicName"
@@ -165,7 +166,6 @@ export const ProfileForm = () => {
                 <Controller
                   name="publicName"
                   control={formMethods.control}
-                  defaultValue=""
                   render={({ field }) => (
                     <Input placeholder="your name" {...field} />
                   )}
@@ -231,7 +231,13 @@ export const ProfileForm = () => {
             <FormItem className="flex flex-row items-center justify-between">
               <FormLabel className="text-sm">Button</FormLabel>
               <FormControl>
-                <Switch onCheckedChange={field.onChange} />
+                <Switch
+                  checked={checked}
+                  onCheckedChange={(value) => {
+                    setChecked(value);
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -262,7 +268,7 @@ export const ProfileForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit" disabled={updateDisabled} >Update</Button>
       </form>
     </Form>
   );

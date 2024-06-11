@@ -10,6 +10,7 @@ import {
 import UserProfileLogo from "./UserProfileLogo";
 import { getTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAppearanceData from "@/shared/hooks/useAppearenceData";
 
 export type UserProfileProps = {
   userName: string;
@@ -23,29 +24,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   buttonUrl,
 }) => {
   const [appearance, setAppearance] = useAtom(appearanceAtom);
-  const [, setNewAppearance] = useAtom(newAppearanceAtom);
-  const [, updateAppearance] = useAtom(updateAppearanceAtom);
-
-  useEffect(() => {
-    const newAppearance = {
-      id: 1,
-      userid: 1,
-      name: "Random Name",
-      description: "Random Description",
-      avatar: "",
-      infoButtonEnable: true,
-      infoButtonText: "Learn More",
-      infoButtonLink: "random-link",
-      font: "Arial",
-      theme: "light",
-      bgColor: "",
-      bgImage: "",
-      hideBranding: false,
-      lastbackground: "theme",
-    };
-    setNewAppearance(newAppearance);
-    updateAppearance(newAppearance);
-  }, [setNewAppearance, updateAppearance]);
+  const [, updateAppearance]  = useAtom(updateAppearanceAtom);
 
   let { foreground, background, text } = getTheme(appearance.theme);
 
@@ -84,7 +63,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
           )}
         </Link>
       </div>
-      {!appearance.hideBranding && <UserProfileLogo />}
+      {appearance.hideBranding && <UserProfileLogo />}
     </>
   );
 };

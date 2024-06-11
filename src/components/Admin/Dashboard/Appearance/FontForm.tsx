@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
 import { useAtom } from "jotai";
-import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import { appearanceAtom } from "@/lib/store";
+import { saveApearance } from "@/actions/save.appearance";
 
 const FormSchema = z.object({
   fontName: z.string().nonempty("Font name is required"),
@@ -35,21 +36,22 @@ export function FontForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       fontName: "",
-    },
-  });
-
-  const onsubmit = (data: z.infer<typeof FormSchema>) => {
+      },
+      });
+      
+  const onsubmit = async(data: z.infer<typeof FormSchema>) => {
     const newAppearance = {
       ...appearance,
       font: data.fontName,
-    };
-    updateAppearance(newAppearance);
-    toast.success("Font updated successfully");
-    setupdateDisabled(true);
+      };
+      await setAppearance(newAppearance);
+      await saveApearance(newAppearance);
+      toast.success("Font updated successfully");
+      setupdateDisabled(true);
   };
 
   const [appearance, setAppearance] = useAtom(appearanceAtom);
-  const [, updateAppearance] = useAtom(updateAppearanceAtom);
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onsubmit)} className="w-full space-y-6">
