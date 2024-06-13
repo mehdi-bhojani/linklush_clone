@@ -1,14 +1,19 @@
 "use client";
-import React, { useState,useCallback } from "react";
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import React, { useState, useCallback, useEffect } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import PageTitle from "@/components/Admin/Dashboard/PageTitle";
 import TheLink from "@/components/Admin/Dashboard/Links/TheLink";
 import TheDialog from "@/components/Admin/Dashboard/Links/TheDialog";
 import { getItemStyle, getItems, getListStyle } from "@/lib/links/utils";
-
+import { getSocialLinks } from "@/actions/get.social.links";
+import useSocialLinks from "@/shared/hooks/useSocialLinks";
 
 function Page() {
-    
   type Link = {
     id: string;
     name: string;
@@ -45,10 +50,14 @@ function Page() {
 
   const handleOnDragEnd = (result: DropResult) => {
     // Implement your logic for handling drag end here
-    console.log('Drag Ended');
+    console.log("Drag Ended");
     const { destination, source } = result;
 
-    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+    if (
+      !destination ||
+      (destination.droppableId === source.droppableId &&
+        destination.index === source.index)
+    ) {
       return;
     }
 
@@ -58,13 +67,16 @@ function Page() {
 
     // Update the items state with the new order
     setItems(itemsCopy);
-    console.log('Items Reordered:', itemsCopy);
-
+    console.log("Items Reordered:", itemsCopy);
   };
-  
-  const grid = items.length;
-  
-    
+
+  // const { data, loading } = useSocialLinks();
+  const grid = 8;
+
+  // useEffect(() => {
+  //   setItems(data);
+  // }, [data]);
+
   return (
     <section className="flex-1 w-full gap-5">
       <div className="flex flex-row justify-between items-center">
@@ -73,22 +85,21 @@ function Page() {
       </div>
 
       <div className="flex flex-wrap gap-6 lg:gap-2 transition-all p-3 border">
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
               <div
-              {...provided.droppableProps}
-               ref={provided.innerRef}
-               style={getListStyle(snapshot.isDraggingOver)}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
               >
                 {items.map((link, index) => (
                   <Draggable key={link.id} draggableId={link.id} index={index}>
                     {(provided, snapshot) => (
                       <div
-                      ref={provided.innerRef}
+                        ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        
                       >
                         <TheLink
                           name={link.name}
@@ -105,7 +116,6 @@ function Page() {
             )}
           </Droppable>
         </DragDropContext>
-        
       </div>
     </section>
   );

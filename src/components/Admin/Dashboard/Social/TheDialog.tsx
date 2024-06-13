@@ -1,5 +1,6 @@
-import React from "react";
-import { JsonObject } from "next-auth/adapters";
+"use client";
+import { z } from "zod";
+import React, { useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -31,7 +32,26 @@ import {
   SnapchatIcon,
   SlackIcon,
 } from "@/lib/Social";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { FormProvider, useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { saveSocialLinks } from "@/actions/save.social.links";
 
 interface SocialProfile {
   icon: string; // Assuming icon is a string representing the icon name
@@ -62,14 +82,6 @@ const socialProfiles: SocialProfile[] = [
   {
     icon: "TiktokIcon",
     name: "Tiktok",
-  },
-  {
-    icon: "WhatsappIcon",
-    name: "WhatsApp",
-  },
-  {
-    icon: "YoutubeIcon",
-    name: "YouTube",
   },
   {
     icon: "BehanceIcon",
@@ -113,77 +125,46 @@ const socialProfiles: SocialProfile[] = [
   },
 ];
 
-function SocialProfilesComponent() {
-  const renderIconComponent = (iconName: string) => {
-    switch (iconName) {
-      case "Facebook":
-        return <FacebookIcon />;
-      case "Instagram":
-        return <InstagramIcon />;
-      case "LinkedIn":
-        return <LinkedinIcon />;
-      case "Behance":
-        return <BehanceIcon />;
-      case "Discord":
-        return <DiscordIcon />;
-      case "Messenger":
-        return <MessengerIcon />;
-      case "Twitter":
-        return <TwitterIcon />;
-      case "Google":
-        return <GoogleIcon />;
-      case "Pinterest":
-        return <PinterestIcon />;
-      case "Vkontakte":
-        return <VkontakteIcon />;
-      case "StackOverflow":
-        return <StackOverflowIcon />;
-      case "Telegram":
-        return <TelegramIcon />;
-      case "YouTube":
-        return <YouTubeIcon />;
-      case "TikTok":
-        return <TikTokIcon />;
-      case "Snapchat":
-        return <SnapchatIcon />;
-      case "Slack":
-        return <SlackIcon />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="w-full">
-      <Label htmlFor="platform" className="sr-only">
-        Platform
-      </Label>
-      <Select>
-        <SelectTrigger>
-          <SelectValue placeholder="Theme" />
-        </SelectTrigger>
-        <SelectContent id="platform" className="w-full">
-          {socialProfiles.map((elem, index) => (
-            <SelectItem value={elem.name} key={index} className="w-full flex flex-row gap-2 items-center">
-              <span className="flex items-center">
-                {/* {renderIconComponent(elem.name)}   */}
-              </span> <span>{elem.name}</span>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  )
+const formSchema = z.object({
+  platform: z.string(),
+  socialLink: z.string().url(),
+});
+interface ChildComponentProps {
+  onCreate: (newLink : any) => void;
 }
 
-function TheDialog(props: JsonObject) {
+const TheDialog: React.FC<ChildComponentProps> = ({ onCreate }) => {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      platform: "",
+      socialLink: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) =>{
+
+    console.log(values);
+    const newLink = {
+      platform: values.platform,
+      socialLink: values.socialLink,
+      clicks:0,
+      clickThroughRate:0,
+    }
+    onCreate(newLink);
+    setDialogOpen(false);
+    // await saveSocialLinks(JSON.parse(JSON.stringify(newLink)));
+
+  }
+
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   return (
     <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>Add New Social</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[400px] rounded">
+      <Button onClick={()=>setDialogOpen(true)}>Add New Social</Button>
+      <Dialog open={dialogOpen} onOpenChange={()=>setDialogOpen(false)}>
+        <DialogContent className="sm:max-w-[500px] rounded">
           <DialogHeader>
             <DialogTitle>
               Please Select the Platform you Want to Select
@@ -194,45 +175,74 @@ function TheDialog(props: JsonObject) {
           </DialogHeader>
           <div className="">
             <div className="flex flex-col gap-3">
-
-              <Label htmlFor="platform" >
-                Platform
-              </Label>
-              <Select>
-                <SelectTrigger id="platform">
-                  <SelectValue placeholder="Select a Platform" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel></SelectLabel>
-                    {socialProfiles.map((currElem, index) => (
-                      <SelectItem key={index} value={currElem.name}>{currElem.name}</SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              <Label htmlFor="link">
-                Url
-              </Label>
-              <Input
-                id="link"
-                placeholder="https://linklu.sh"
-                className="col-span-3"
-              />
+              <FormProvider {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
+                  <FormField
+                    control={form.control}
+                    name="platform"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Platform</FormLabel>
+                        <FormControl>
+                          <Controller
+                            name="platform"
+                            control={form.control}
+                            render={({ field }) => (
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <SelectTrigger id="platform">
+                                  <SelectValue placeholder="Select a Platform" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {socialProfiles.map((currElem, index) => (
+                                    <SelectItem
+                                      key={index}
+                                      value={currElem.name}
+                                    >
+                                      {currElem.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="socialLink"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Url</FormLabel>
+                        <FormControl>
+                          <Input
+                            id="link"
+                            placeholder="https://linklu.sh"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full">Submit</Button>
+                </form>
+              </FormProvider>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="submit" className="w-full">
-               Submit
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div >
+    </div>
   );
 }
 
-TheDialog.propTypes = {};
 
 export default TheDialog;

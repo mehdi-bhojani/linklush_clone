@@ -2,11 +2,7 @@ import React, { useEffect } from "react";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useAtom } from "jotai";
-import {
-  appearanceAtom,
-  newAppearanceAtom,
-  updateAppearanceAtom,
-} from "../../../lib/store";
+import { appearanceAtom } from "../../../lib/store";
 import UserProfileLogo from "./UserProfileLogo";
 import { getTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,7 +20,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
   buttonUrl,
 }) => {
   const [appearance, setAppearance] = useAtom(appearanceAtom);
-  const [, updateAppearance]  = useAtom(updateAppearanceAtom);
 
   let { foreground, background, text } = getTheme(appearance.theme);
 
@@ -37,7 +32,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
       : "";
   }
 
-  const avatarUrl = (appearance.avatar)?`/avatars/${appearance.avatar}`:'';
+  const avatarUrl = appearance.avatar ? `/avatars/${appearance.avatar}` : "";
 
   return (
     <>
@@ -46,14 +41,20 @@ const UserProfile: React.FC<UserProfileProps> = ({
         style={{ background, color: text }}
       >
         <div className="flex flex-col items-center justify-center space-y-1.5 text-center p-3 sm:p-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={avatarUrl} alt="@shadcn" style={{ background: foreground, color: text }}/>
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+          <Avatar className="w-20 h-20">
+            <AvatarImage
+              src={avatarUrl}
+              alt="@shadcn"
+              style={{ background: foreground, color: text }}
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
           <h3 className="font-semibold tracking-tight text-lg">
             {appearance.name || userName}
           </h3>
-            <span className="text-sm">{appearance.description || "Random Description"}</span>
+          <span className="text-sm">
+            {appearance.description || "Random Description"}
+          </span>
         </div>
         <Link href={appearance.infoButtonLink || buttonUrl}>
           {appearance.infoButtonEnable && (

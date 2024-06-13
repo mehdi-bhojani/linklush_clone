@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { ColorPicker } from "./ColorPicker";
 import { useAtom } from "jotai";
-import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import { appearanceAtom } from "@/lib/store";
 import useAppearanceData from "@/shared/hooks/useAppearenceData";
 import { saveApearance } from "@/actions/save.appearance";
 
@@ -56,7 +56,7 @@ export const OtherForm = () => {
 
       
       if (result) {
-        await updateAppearance(newAppearance);
+        await setAppearance(newAppearance);
         await saveApearance(newAppearance);
         toast.success("File uploaded successfully");
       } else {
@@ -70,7 +70,7 @@ export const OtherForm = () => {
         bgColor: color,
         lastbackground: "color",
       };
-      await updateAppearance(newAppearance);
+      await setAppearance(newAppearance);
       await saveApearance(newAppearance);
       toast.success("Color updated successfully");
       setUpdateDisabled(true);
@@ -103,7 +103,6 @@ export const OtherForm = () => {
     fileInputRef.current?.click();
   };
 
-  const [, updateAppearance] = useAtom(updateAppearanceAtom);
   const [appearance, setAppearance] = useAtom(appearanceAtom);
 
   return (
