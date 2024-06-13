@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -8,27 +8,30 @@ import {
 } from "react-beautiful-dnd";
 import PageTitle from "@/components/Admin/Dashboard/PageTitle";
 import TheLink from "@/components/Admin/Dashboard/Social/TheLink";
-import { getItemStyle, getItems, getListStyle } from "@/lib/links/utils";
+import {  getListStyle } from "@/lib/links/utils";
 import TheDialog from "@/components/Admin/Dashboard/Social/TheDialog";
-import useSocialLinks from "@/shared/hooks/useSocialLinks";
 import UseSocialLinks from "@/shared/hooks/useSocialLinks";
 import { deleteSocialLinks } from "@/actions/delete.social.link";
 import { saveSocialLinks } from "@/actions/save.social.links";
 import toast from "react-hot-toast";
 import NoProfileFound from "@/components/Admin/Dashboard/NoProfileFound";
+import { useAtom } from "jotai";
+import { socialLinksAtom } from "@/lib/store";
+import { socialLinks as Link } from "@/lib/store";
 
 function Page() {
-  type Link = {
-    userid: string;
-    platform: string;
-    socialLink: string;
-    clicks: number;
-    clickThroughRate: number;
-    enabled: boolean;
-  };
+  // type Link = {
+  //   userid: string;
+  //   platform: string;
+  //   socialLink: string;
+  //   clicks: number;
+  //   clickThroughRate: number;
+  //   enabled: boolean;
+  // };
 
   const { data, loading } = UseSocialLinks();
   const [items, setItems] = useState<Link[]>(data);
+  const [socialLinks, setSocialLinks] = useAtom<Link[]>(socialLinksAtom);
   useEffect(() => {
     setItems(data);
   }, [data]);
@@ -61,6 +64,7 @@ function Page() {
     try {
       const res = await deleteSocialLinks(JSON.parse(JSON.stringify(platform)));
       setItems([...items.filter((item) => item.platform !== platform)]);
+      setSocialLinks([...socialLinks.filter((socialLinks) => socialLinks.platform !== platform)]);
       toast.success("Link deleted successfully");
     } catch (err) {
       toast.error("Error deleting link");
@@ -71,35 +75,24 @@ function Page() {
     try {
       const res = await saveSocialLinks(JSON.parse(JSON.stringify(newLink)));
       setItems([...items, newLink]);
+      setSocialLinks([...socialLinks, newLink]);
+      console.log("socialLinks");
+      console.log(socialLinks);
       toast.success("Link created successfully");
     } catch (err) {
       toast.error("Error creating link");
     }
   };
 
-  // const handleUpdateLink = async (updatedLink: Link) => {
-  //   try {
-  //     const res = await saveSocialLinks(
-  //       JSON.parse(JSON.stringify(updatedLink))
-  //     );
-  //     const updatedData = items.map((element) => {
-  //       if (element.platform === updatedLink.platform) {
-  //         return updatedLink;
-  //       }
-  //       return element;
-  //     });
-  //     setItems(updatedData);
-  //     toast.success("Link updated successfully");
-  //   } catch (err) {
-  //     toast.error("Error updating link");
-  //   }
-  //   setItems(data);
-  // };
-
   const handleUpdateLink = async (updatedLink: Link) => {
     try {
       const res = await saveSocialLinks(JSON.parse(JSON.stringify(updatedLink)));
       setItems((prevItems) =>
+        prevItems.map((element) =>
+          element.platform === updatedLink.platform ? updatedLink : element
+        )
+      );
+      setSocialLinks((prevItems) =>
         prevItems.map((element) =>
           element.platform === updatedLink.platform ? updatedLink : element
         )

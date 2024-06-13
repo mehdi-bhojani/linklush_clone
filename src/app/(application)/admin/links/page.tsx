@@ -8,45 +8,25 @@ import {
 } from "react-beautiful-dnd";
 import PageTitle from "@/components/Admin/Dashboard/PageTitle";
 import TheLink from "@/components/Admin/Dashboard/Links/TheLink";
+import { getListStyle } from "@/lib/links/utils";
 import TheDialog from "@/components/Admin/Dashboard/Links/TheDialog";
-import { getItemStyle, getItems, getListStyle } from "@/lib/links/utils";
-import { getSocialLinks } from "@/actions/get.social.links";
-import useSocialLinks from "@/shared/hooks/useSocialLinks";
+import toast from "react-hot-toast";
+import NoProfileFound from "@/components/Admin/Dashboard/NoProfileFound";
+import { saveNormalLinks } from "@/actions/save.normal.links";
+import UseNormalLinks from "@/shared/hooks/useNormalLinks";
+import { normalLinks, normalLinksAtom, normalLinks as normalLinksType} from "@/lib/store";
+import { ObjectId } from "mongoose";
+import { deleteNormalLinks } from "@/actions/delete.normal.link";
+import { useAtom } from "jotai";
 
 function Page() {
-  type Link = {
-    id: string;
-    name: string;
-    facebookLink: string;
-    clicks: number;
-    ctr: number;
-  };
 
-  const links: Link[] = [
-    {
-      id: '1',
-      name: "Example Link 1",
-      facebookLink: "https://www.facebook.com/example1",
-      clicks: 123,
-      ctr: 5.6,
-    },
-    {
-      id: '2',
-      name: "Example Link 2",
-      facebookLink: "https://www.facebook.com/example2",
-      clicks: 456,
-      ctr: 4.3,
-    },
-    {
-      id: '3',
-      name: "Example Link 3",
-      facebookLink: "https://www.facebook.com/example3",
-      clicks: 789,
-      ctr: 3.2,
-    }
-  ];
-
-  const [items, setItems] = useState<Link[]>(links);
+  const { data, loading } = UseNormalLinks();
+  const [normalLinks, setNormalLinks] = useAtom<normalLinks[]>(normalLinksAtom);
+  const [items, setItems] = useState<normalLinksType[]>(data);
+  useEffect(() => {
+    setItems(data);
+  }, [data]);
 
   const handleOnDragEnd = (result: DropResult) => {
     // Implement your logic for handling drag end here
@@ -61,7 +41,7 @@ function Page() {
       return;
     }
 
-    const itemsCopy: Link[] = Array.from(items);
+    const itemsCopy: normalLinksType[] = Array.from(items);
     const [reorderedItem] = itemsCopy.splice(source.index, 1);
     itemsCopy.splice(destination.index, 0, reorderedItem);
 
@@ -70,47 +50,98 @@ function Page() {
     console.log("Items Reordered:", itemsCopy);
   };
 
-  // const { data, loading } = useSocialLinks();
   const grid = 8;
+  // child functions
+  const handleDeleteLink = async (_id: ObjectId) => {
+    try {
+      const res = await deleteNormalLinks(JSON.parse(JSON.stringify(_id)));
+      setItems([...items.filter((item) => item._id !== _id)]);
+      setNormalLinks([...normalLinks.filter((item) => item._id !== _id)]);
+      toast.success("Link deleted successfully");
+    } catch (err) {
+      toast.error("Error deleting link");
+    }
+  };
 
-  // useEffect(() => {
-  //   setItems(data);
-  // }, [data]);
+  const handleCreateLink = async (newNormalLink:normalLinks) => {
+    try {
+      const res = await saveNormalLinks(JSON.parse(JSON.stringify(newNormalLink)));
+      setItems([...items, newNormalLink]);
+      setNormalLinks([...normalLinks, newNormalLink]);
+      toast.success("Link created successfully");
+    } catch (err) {
+      toast.error("Error creating link");
+    }
+  };
+
+
+  const handleUpdateLink = async (updatedLink: normalLinksType) => {
+    try {
+      const res = await saveNormalLinks(JSON.parse(JSON.stringify(updatedLink)));
+      setItems((prevItems) =>
+        prevItems.map((element) =>
+          element._id === updatedLink._id ? updatedLink : element
+        )
+      );
+      setNormalLinks((prevItems) =>
+        prevItems.map((element) =>
+          element._id === updatedLink._id ? updatedLink : element
+        )
+      );
+      toast.success("Link updated successfully");
+    } catch (err) {
+      toast.error("Error updating link");
+    }
+  };
+  
 
   return (
-    <section className="flex-1 w-full gap-5">
-      <div className="flex flex-row justify-between items-center">
-        <PageTitle tittle="Links (1)" />
-        <TheDialog />
+    <section className="flex flex-col gap-3">
+      <div className="flex flex-row justify-between items-center w-full">
+        <PageTitle tittle={`Links (${items?.length || 0})`} />
+        <TheDialog onCreate={handleCreateLink} />
       </div>
 
-      <div className="flex flex-wrap gap-6 lg:gap-2 transition-all p-3 border">
+      <div className="container-fluid">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
               <div
+                className="w-full flex flex-col gap-3 border p-3"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver)}
               >
-                {items.map((link, index) => (
-                  <Draggable key={link.id} draggableId={link.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <TheLink
-                          name={link.name}
-                          facebookLink={link.facebookLink}
-                          clicks={link.clicks}
-                          ctr={link.ctr}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                {items.length!=0 ? (
+                  items.map((link, index) => (
+                    <Draggable
+                      key={index}
+                      draggableId={link.userid}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <TheLink
+                            key={index}
+                            normalLinks={link}
+                            onUpdate={handleUpdateLink}
+                            onDelete={handleDeleteLink}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <div>
+                    <NoProfileFound />
+                    <h1 className="text-xl">No Social Profile Found</h1>
+                  </div>
+                )}
+
                 {provided.placeholder}
               </div>
             )}
