@@ -24,7 +24,6 @@ const UseSocialLinks = () => {
         setData(res);
         setLoading(false);
         setSocialLinks(res);
-        console.log(res);
       })
       .catch((error) => {
         setLoading(false);

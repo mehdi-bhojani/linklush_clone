@@ -28,6 +28,7 @@ export const saveApearance = async(appearance:AppearanceType)=>{
                 hideBranding: appearance?.hideBranding,
                 lastbackground: appearance?.lastbackground,
             });
+            console.log("appearance update successfully");
             return {message : "appearance update successfully"};
         }else{
             await Appearance.create({
@@ -46,6 +47,7 @@ export const saveApearance = async(appearance:AppearanceType)=>{
                 lastbackground: appearance?.lastbackground,
             });
             return {message : "appearance created successfully"};   
+            console.log("appearance created successfully");
         }
     } catch (error) {
         console.error("Error saving email: ", error);

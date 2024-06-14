@@ -138,7 +138,7 @@ function Page() {
                 ) : (
                   <div>
                     <NoProfileFound />
-                    <h1 className="text-xl">No Social Profile Found</h1>
+                    <h1 className="text-xl">No Link Found</h1>
                   </div>
                 )}
 

@@ -18,7 +18,7 @@ interface ThemeSkeletonProps {
   text: string;
 }
 import { useAtom } from "jotai";
-import { appearanceAtom, updateAppearanceAtom } from "@/lib/store";
+import { appearanceAtom } from "@/lib/store";
 import useAppearanceData from "@/shared/hooks/useAppearenceData";
 import { saveApearance } from "@/actions/save.appearance";
 

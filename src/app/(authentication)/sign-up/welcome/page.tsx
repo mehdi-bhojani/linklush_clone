@@ -1,6 +1,5 @@
-
-import WellcomeForm from '@/components/form/WellcomeForm';
-import React from 'react';
+import WellcomeForm from "@/components/form/WellcomeForm";
+import React from "react";
 
 function page() {
   return (
@@ -11,6 +10,3 @@ function page() {
 }
 
 export default page;
-
-
-

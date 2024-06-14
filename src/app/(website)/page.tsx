@@ -5,21 +5,16 @@ import UnderstandAudienceSection from "@/components/website/home/UnderstandAudie
 import IntegrationSection from "@/components/website/home/IntegrationSection";
 import FaqsSection from "@/components/website/home/FaqsSection";
 
-
 export default function Home() {
   return (
     <>
-
-
-
-
-       <HeroSection />
-       <FeaturesSection />
-           {<GrowAudienceSection />} 
-             {/* problem */}
-      <UnderstandAudienceSection />
+      {/*  <HeroSection /> */}
+      {/*  <FeaturesSection />
+       */}
+      {/*     {<GrowAudienceSection />} */} {/* problem */}
+      {/*  <UnderstandAudienceSection /> */}
       <IntegrationSection />
-      <FaqsSection /> 
+      <FaqsSection />
     </>
   );
 }

@@ -1,18 +1,18 @@
-import SearchEngineOptimize from '@/components/Admin/Dashboard/Setting/SearchEngineOptimize';
-import Subscribe from '@/components/Admin/Dashboard/Setting/Subscribe';
-import Username from '@/components/Admin/Dashboard/Setting/Username';
-import React from 'react';
+import SeoSection from "@/components/Admin/Settings/SeoSection";
+import SubscribeSection from "@/components/Admin/Settings/SubscribeSection";
+import UserName from "@/components/Admin/Settings/UserName";
+import React from "react";
 
 function page() {
-    return (
-        <div>
-            <div className="flex flex-col gap-3">
-                <SearchEngineOptimize />
-                <Username />
-                <Subscribe />
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <h2 className="text-xl font-semibold mb-4">Settings</h2>
+
+      <SeoSection />
+      <UserName />
+      <SubscribeSection />
+    </>
+  );
 }
 
 export default page;

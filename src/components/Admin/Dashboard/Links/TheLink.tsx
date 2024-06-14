@@ -51,7 +51,7 @@ const TheLink: React.FC<TheLinkProps> = ({
               </div>
               <div className="flex items-center w-1/10 flex-shrink">
                 <Avatar>
-                  <AvatarImage src={normalLinks.avatarUrl!=null && `/avatars/${normalLinks.avatarUrl}`} />
+                  <AvatarImage src={(normalLinks.avatarUrl!=null)? "": `/avatars/${normalLinks.avatarUrl}`} />
                   <AvatarFallback>{normalLinks.title.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>

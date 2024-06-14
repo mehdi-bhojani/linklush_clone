@@ -1,7 +1,7 @@
-import { connect } from '@/utils/config/dbconfig';
-import User from '@/utils/models/auth';
-import bcryptjs from 'bcryptjs';
-import { NextResponse, NextRequest } from 'next/server';
+import { connect } from "@/utils/config/dbconfig";
+import User from "@/utils/models/auth";
+import bcryptjs from "bcryptjs";
+import { NextResponse, NextRequest } from "next/server";
 
 connect();
 
@@ -13,13 +13,9 @@ export async function POST(request: NextRequest) {
 
     if (user) {
       return NextResponse.json(
-
-        { error: 'User already exists' },
+        { error: "User already exists" },
         { status: 400 },
-
       );
-
-
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -34,7 +30,7 @@ export async function POST(request: NextRequest) {
     const savedUser = await newUser.save();
 
     return NextResponse.json({
-      message: 'User created successfully',
+      message: "User created successfully",
       success: true,
       savedUser,
     });

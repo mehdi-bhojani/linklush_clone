@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useAtom } from "jotai";
@@ -28,26 +28,24 @@ const UserProfile: React.FC<UserProfileProps> = ({
   buttonText,
   buttonUrl,
 }) => {
-  const { data: normalLinksData, loading: normalLinksLoading } =
-    UseNormalLinks();
-  const { data: socialLinksData, loading: socialLinksLoading } =
-    UseSocialLinks();
-  const { data: appearanceData, loading: appearanceLoading } =
-    useAppearanceData();
 
   const [appearance] = useAtom(appearanceAtom);
-  const [socialLinks] = useAtom(socialLinksAtom);
-  const [normalLinks] = useAtom(normalLinksAtom);
+   const [socialLinks] = useAtom(socialLinksAtom);
+   const [normalLinks] = useAtom(normalLinksAtom);
 
-  let { foreground, background, text } = getTheme(appearance.theme);
+useEffect(() => {
 
-  if (appearance.lastbackground === "color") {
-    background = appearance.bgColor;
-  } else if (appearance.lastbackground !== "theme" && appearance.bgImage) {
-    background = `url('/backgrounds/${appearance.bgImage}')`;
+},[]);  
+
+  let { foreground, background, text } = getTheme(appearance?.theme || "Clean Gray");
+
+  if (appearance?.lastbackground === "color") {
+    background = appearance?.bgColor;
+  } else if (appearance?.lastbackground !== "theme" && appearance?.bgImage) {
+    background = `url('/backgrounds/${appearance?.bgImage}')`;
   }
 
-  const avatarUrl = appearance.avatar ? `/avatars/${appearance.avatar}` : "";
+  const avatarUrl = appearance?.avatar ? `/avatars/${appearance?.avatar}` : "";
 
   return (
     <>
@@ -60,23 +58,23 @@ const UserProfile: React.FC<UserProfileProps> = ({
             <Avatar className="w-20 h-20">
               <AvatarImage
                 src={avatarUrl}
-                alt={appearance.name || userName}
+                alt={appearance?.name || userName}
                 style={{ background: foreground }}
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <h3 className="font-semibold tracking-tight text-lg">
-              {appearance.name || userName}
+              {appearance?.name || userName}
             </h3>
             <span className="text-sm">
-              {appearance.description || "Random Description"}
+              {appearance?.description || "Random Description"}
             </span>
           </div>
-          {appearance.infoButtonEnable && (
+          {appearance?.infoButtonEnable && (
             <div className="my-2">
-              <Link href={appearance.infoButtonLink || buttonUrl}>
+              <Link href={appearance?.infoButtonLink || buttonUrl}>
                 <Button className="text-slate-600" style={{ background }}>
-                  {appearance.infoButtonText || buttonText}
+                  {appearance?.infoButtonText || buttonText}
                 </Button>
               </Link>
             </div>
@@ -123,7 +121,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </a>
           ))}
         </div>
-        {!appearance.hideBranding && <UserProfileLogo />}
+        {!appearance?.hideBranding && <UserProfileLogo />}
       </div>
     </>
   );

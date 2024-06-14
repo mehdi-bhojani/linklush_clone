@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { getNormalLinks } from "@/actions/get.normal.links";
-import { normalLinksAtom } from "@/lib/store";
+import { normalLinks, normalLinksAtom } from "@/lib/store";
 
 const UseNormalLinks = () => {
   const [data, setData] = useState([]);
@@ -24,7 +24,6 @@ const UseNormalLinks = () => {
         setData(res);
         setLoading(false);
         setNormalLinks(res);
-        console.log(res);
       })
       .catch((error) => {
         setLoading(false);

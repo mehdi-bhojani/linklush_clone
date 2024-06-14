@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -81,9 +82,12 @@ export const ProfileForm = () => {
             infoButtonLink: data.infoButtonLink || data.infoButtonLink,
           };
 
-          await setAppearance(newAppearance);
-          await saveApearance(newAppearance);
-          toast.success("File uploaded successfully");
+          await saveApearance(JSON.parse(JSON.stringify(newAppearance))).then(() => {
+            setAppearance(newAppearance);
+            toast.success("File uploaded successfully");
+          }).catch(() => {
+            toast.error("Failed to upload file");
+          });
         
         } else {
           toast.error("Failed to upload file");
@@ -107,9 +111,12 @@ export const ProfileForm = () => {
         infoButtonText: data.infoButtonText || data.infoButtonText,
         infoButtonLink: data.infoButtonLink || data.infoButtonLink,
       };
-      await saveApearance(newAppearance);
-      await setAppearance(newAppearance);
-      toast.success("Submission Successful");
+      await saveApearance(JSON.parse(JSON.stringify(newAppearance))).then(() => {
+        setAppearance(newAppearance);
+        toast.success("Submission Successful");
+      }).catch(() => {
+        toast.error("Failed to upload file");
+      });
     }
     setupdateDisabled(true);
   };
