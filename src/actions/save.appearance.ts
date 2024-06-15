@@ -4,16 +4,17 @@ import DbConnect from "@/lib/db";
 import { Appearance as AppearanceType} from "@/lib/store";
 import Appearance from "@/utils/models/appearance.model";
 
+
 export const saveApearance = async(appearance:AppearanceType)=>{
-    const {userid} = appearance;
+    const UserId = appearance.userid;
     try {
         await DbConnect();
         const newAppearance = await Appearance.findOne({
-            userid,
+            userid: UserId,
         });
         if(newAppearance){
             await Appearance.findOneAndUpdate(
-                {userid},
+                {userid: UserId},
                 {
                 name: appearance?.name,
                 description: appearance?.description,
@@ -29,7 +30,8 @@ export const saveApearance = async(appearance:AppearanceType)=>{
                 lastbackground: appearance?.lastbackground,
             });
             console.log("appearance update successfully");
-            return {message : "appearance update successfully"};
+            return;
+ 
         }else{
             await Appearance.create({
                 userid: appearance?.userid,
@@ -46,8 +48,8 @@ export const saveApearance = async(appearance:AppearanceType)=>{
                 hideBranding: appearance?.hideBranding,
                 lastbackground: appearance?.lastbackground,
             });
-            return {message : "appearance created successfully"};   
             console.log("appearance created successfully");
+            return;   
         }
     } catch (error) {
         console.error("Error saving email: ", error);

@@ -2,38 +2,30 @@ import React, { useEffect, useState } from "react";
 import Logo from "../../Header/Logo";
 import { Switch } from "@/components/ui/switch";
 import toast from "react-hot-toast";
-import { useAtom } from "jotai";
-import { appearanceAtom } from "@/lib/store";
-import useAppearanceData from "@/shared/hooks/useAppearenceData";
-import { saveApearance } from "@/actions/save.appearance";
+import { Appearance } from "@/lib/store";
 
-function HideBranding() {
-  const { data, loading } = useAppearanceData();
+interface brandProps {
+  appearance: Appearance;
+  updateAppearance: (getAppearance: Appearance) => void;
+}
+
+const HideBranding:React.FC<brandProps> = (props) => {
   const [hideBrand, setHideBrand] = useState<boolean>(false);
-  const [appearance, setAppearance] = useAtom(appearanceAtom);
 
   useEffect(() => {
-    if (data) {
-      const appearanceData = (data as any)[0];
+      const appearanceData = props.appearance;
       setHideBrand(appearanceData?.hideBranding || false);
-    }
-  }, [data]);
+  }, [props.appearance]);
 
   const handleSwitchChange = async (checked: boolean) => {
     setHideBrand(checked);
     const newAppearance = {
-      ...appearance,
+      ...props.appearance,
       hideBranding: checked,
     };
-    setAppearance(newAppearance);
-    try {
-      await saveApearance(newAppearance);
-      toast.success(`Branding ${checked ? "hidden" : "shown"}`, { duration: 2000 });
-    } catch (error) {
-      toast.error("Failed to save changes");
-    }
-  };
-
+    props.updateAppearance(newAppearance);
+  }
+  
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-col gap-2">

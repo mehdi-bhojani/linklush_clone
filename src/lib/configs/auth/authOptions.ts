@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
           });
           const res = await newUser.save();
           if (res.status === 200 || res.status === 201) {
-            console.log(res);
+            // console.log(res);
             return user;
           }
         } catch (err) {
@@ -86,7 +86,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.name = token.name;
       }
-      console.log(session);
+      // console.log(session);
       return session;
     },
   },

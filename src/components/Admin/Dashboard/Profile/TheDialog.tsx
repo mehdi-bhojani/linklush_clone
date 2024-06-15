@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -15,14 +14,14 @@ import {
 } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/button";
 
-function TheDialog(props: any) {
+const TheDialog: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
   const closeDialog = () => setIsOpen(false);
 
   const router = useRouter();
-  
+
   const handleSubmit = async () => {
     // Delete account logic here
     await console.log("Deleted account");
@@ -35,7 +34,10 @@ function TheDialog(props: any) {
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button onClick={openDialog} className="mt-4 bg-destructive hover:bg-destructive-dark text-white rounded-md px-4 py-2 transition-colors">
+          <Button
+            onClick={openDialog}
+            className="mt-4 bg-destructive hover:bg-destructive-dark text-white rounded-md px-4 py-2 transition-colors"
+          >
             Delete Account
           </Button>
         </DialogTrigger>
@@ -45,8 +47,8 @@ function TheDialog(props: any) {
           </DialogHeader>
           <DialogDescription>
             <p className="color-slate-400 text-sm text-justify">
-              This action is irreversible. Once you delete your account, all
-              of your data, including your profile, and user data will be
+              This action is irreversible. Once you delete your account, all of
+              your data, including your profile, and user data will be
               permanently removed and cannot be recovered.
             </p>
           </DialogDescription>
@@ -62,8 +64,6 @@ function TheDialog(props: any) {
       </Dialog>
     </div>
   );
-}
-
-TheDialog.propTypes = {};
+};
 
 export default TheDialog;

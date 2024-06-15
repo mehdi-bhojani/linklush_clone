@@ -11,22 +11,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { ColorPicker } from "./ColorPicker";
 import { useAtom } from "jotai";
-import { appearanceAtom } from "@/lib/store";
+import { Appearance, appearanceAtom } from "@/lib/store";
 import useAppearanceData from "@/shared/hooks/useAppearenceData";
 import { saveApearance } from "@/actions/save.appearance";
+import { useSession } from "next-auth/react";
 
-export const OtherForm = () => {
+interface otherProps {
+  appearance: Appearance;
+  updateAppearance: (getAppearance: Appearance) => void;
+}
+
+export const OtherForm:React.FC<otherProps> = (props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const {data,loading} = useAppearanceData();
-  const [color, setColor] = useState("#0f0f0f");
+  const [color, setColor] = useState("#fff");
   const [updateDiabled, setUpdateDisabled] = useState(true);
 
+  // useEffect(()=>{
+  //   ((data as any)[0]?.bgColor!=undefined)? setColor((data as any)[0].bgColor) : '';
+  //   ((data as any)[0]?.bgImage != "" && (data as any)[0]?.bgImage != undefined) ? setPreviewUrl('/backgrounds/'+(data as any)[0]?.bgImage) : "";
+  // },[data]);
   useEffect(()=>{
-    setColor((data as any)[0]?.bgColor);
-    ((data as any)[0]?.bgImage != "") ? setPreviewUrl('/backgrounds/'+(data as any)[0]?.bgImage) : "";
-  },[data]);
+    (props.appearance?.bgColor!=undefined)? setColor(props.appearance.bgColor) : '';
+    (props.appearance?.bgImage != "" && props.appearance?.bgImage != undefined) ? setPreviewUrl('/backgrounds/'+props.appearance?.bgImage) : "";
+  },[props.appearance]);
   
   const handleColorChange = (newColor: string) => {
     setUpdateDisabled(false);
@@ -56,23 +65,18 @@ export const OtherForm = () => {
 
       
       if (result) {
-        await setAppearance(newAppearance);
-        await saveApearance(newAppearance);
-        toast.success("File uploaded successfully");
-      } else {
-        toast.error("Failed to upload file");
+        props.updateAppearance(newAppearance);
       }
       setUpdateDisabled(true);
-    } else if(color != appearance.bgColor) {
+      return;
+    } else if(color != appearance?.bgColor) {
       // Update color
       const newAppearance = {
         ...appearance,
         bgColor: color,
         lastbackground: "color",
       };
-      await setAppearance(newAppearance);
-      await saveApearance(newAppearance);
-      toast.success("Color updated successfully");
+      props.updateAppearance(newAppearance);
       setUpdateDisabled(true);
     }
   };

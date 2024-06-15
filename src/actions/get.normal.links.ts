@@ -8,9 +8,8 @@ export const getNormalLinks = async({userid}:{userid:string}) => {
     try {
         await DbConnect();
         const findNormalLinks = await Link.find({
-            userid: "123",
+            userid,
         })
-        console.log(findNormalLinks);
         return JSON.parse(JSON.stringify(findNormalLinks));
     } catch (error) {
         console.log(error);

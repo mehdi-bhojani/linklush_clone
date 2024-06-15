@@ -116,9 +116,9 @@ function FaqsSection() {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="tabler-icon tabler-icon-arrow-right ml-2"
           >
             <path d="M5 12l14 0"></path>

@@ -1,13 +1,11 @@
 'use server';
 
-import mongoose, { Types } from "mongoose";
+import  { Types } from "mongoose";
 import DbConnect from "@/lib/db";
 import Link from "@/utils/models/link.model";
 
 // Function to delete Link links based on user ID and platform
-export const deleteNormalLinks = async (delete_id: string) => {
-    // Fetch user ID from the session or authentication context
-    const userId = "123"; // Replace this with actual session-based user ID
+export const deleteNormalLinks = async (delete_id: string,userid: string) => {
 
     try {
         // Connect to the database
@@ -22,13 +20,12 @@ export const deleteNormalLinks = async (delete_id: string) => {
         const objectId = new Types.ObjectId(delete_id);
 
         // Delete the Link link based on the ObjectId
-        const deleteNormalLink = await Link.findByIdAndDelete(objectId);
+        const deleteNormalLink = await Link.findOneAndDelete({ _id: objectId, userid });
 
         if (deleteNormalLink) {
-            console.log("Normal link deleted: " + delete_id);
-            console.log(deleteNormalLink);
+            console.log("Normal link deleted: ");
         } else {
-            console.log("No Normal link found for ID: " + delete_id );
+            console.log("No Normal link found for ID: " + delete_id);
         }
 
         return;

@@ -23,7 +23,7 @@ export interface normalLinks {
 // Standard interface and functions
 export interface Appearance {
     id: number;
-    userid: number;
+    userid: string;
     name: string;
     description: string;
     avatar: string;
@@ -42,14 +42,21 @@ export interface socialLinks {
     userid: string;
     platform: string;
     socialLink: string;
+    enabled: boolean;
     clicks: number;
     clickThroughRate: number;
+}
+
+export interface user {
+  name: string;
+  email: string;
+  image: string;
 }
 
 // Atom to hold a single Appearance object
 export const appearanceAtom = atom<Appearance>({
     id: 0,
-    userid: 0,
+    userid: "",
     name: '',
     description: '',
     avatar: '',
@@ -66,7 +73,7 @@ export const appearanceAtom = atom<Appearance>({
 //Atom to hold a list of socialLinks
 export const socialLinksAtom = atom<socialLinks[]>([]);
 export const normalLinksAtom = atom<normalLinks[]>([]);
-
+export const userAtom = atom<user>({  name: '', email: '',image:'' });
 
 
 

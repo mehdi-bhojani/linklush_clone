@@ -19,6 +19,8 @@ import Link from "next/link";
 import GoogleSignInButton from "./GoogleButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAtom } from "jotai";
+import { userAtom } from "@/lib/store";
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email required").email("Invalid email"),
@@ -45,6 +47,7 @@ export function SignInForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("");
+  const [user, setUser] = useAtom(userAtom);
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     setLoading(true);
@@ -58,7 +61,7 @@ export function SignInForm() {
       if (res?.error) {
         setError(errorMessages[res.error] || errorMessages.default);
       } else {
-        setError("You are login into DashBoard wait...");
+        setError("You are login into DashBoard wait... with id : ");
         router.push("/admin");
       }
     } catch (error) {

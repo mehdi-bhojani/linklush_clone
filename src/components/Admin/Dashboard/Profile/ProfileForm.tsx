@@ -37,9 +37,7 @@ export function ProfileForm() {
 
   const { toast } = useToast()  // Destructure toast from useToast
   
-  function onSubmit(data: z.infer<typeof FormSchema>, event: React.FormEvent) {
-    // Prevent default form submission behavior
-    event.preventDefault();
+  function onSubmit(data: z.infer<typeof FormSchema>) {
 
     console.log("Form submitted with data:", data);
     const sanitizedData = {

@@ -3,35 +3,33 @@
 import DbConnect from "@/lib/db";
 import Social from "@/utils/models/social.model";
 
-export const saveSocialLinks = async (socialLinks:any) => {
-    const {  platform, socialLink, clicks, clickThroughRate,enabled } = socialLinks;
-    
+export const saveSocialLinks = async (socialLinks: any) => {
+    const { userid, platform, socialLink, clicks, clickThroughRate, enabled } = socialLinks;
+
     try {
         // Connect to the database
         await DbConnect();
-        
+
         const findedSocialLink = await Social.findOne({
-            userid:"123",
+            userid,
             platform,
         });
 
-        if(findedSocialLink){
-            console.log("Social link found: " + platform);
-            const updatedSocialLink = await Social.updateOne({userid:"123", platform}, {socialLink, clicks, clickThroughRate,enabled});
-            console.log(updatedSocialLink);
-            return;
+        if (findedSocialLink) {
+            const updatedSocialLink = await Social.updateOne({ userid, platform }, { socialLink, clicks, clickThroughRate, enabled });
+            console.log("Social link updated: ");
+            return JSON.parse(JSON.stringify(updatedSocialLink));
         }
-
         // Create a new social link
         const createdSocialLink = await Social.create({
-            userid:"123",
+            userid,
             platform,
             socialLink,
             clicks,
             clickThroughRate,
         });
-        
-        return;
+        console.log("Social link created: ");
+        return JSON.parse(JSON.stringify(createdSocialLink));
     } catch (error) {
         console.error("Error saving social link:", error);
         throw error; // Rethrow the error to handle it elsewhere

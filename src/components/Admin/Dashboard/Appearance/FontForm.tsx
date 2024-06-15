@@ -4,34 +4,24 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Appearance} from "@/lib/store";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import toast from "react-hot-toast";
-import { useAtom } from "jotai";
-import { appearanceAtom } from "@/lib/store";
-import { saveApearance } from "@/actions/save.appearance";
+
 
 const FormSchema = z.object({
   fontName: z.string().nonempty("Font name is required"),
 });
 
-export function FontForm() {
-  const [updateDisabled, setupdateDisabled] = useState(true);
+interface fontProps {
+  appearance: Appearance;
+  updateAppearance: (getAppearance: Appearance) => void;
+}
 
+export const FontForm:React.FC<fontProps> = (props)  => {
+  const [updateDisabled, setupdateDisabled] = useState(true);
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -41,16 +31,12 @@ export function FontForm() {
       
   const onsubmit = async(data: z.infer<typeof FormSchema>) => {
     const newAppearance = {
-      ...appearance,
+      ...props.appearance,
       font: data.fontName,
       };
-      await setAppearance(newAppearance);
-      await saveApearance(newAppearance);
-      toast.success("Font updated successfully");
+      props.updateAppearance(newAppearance);
       setupdateDisabled(true);
   };
-
-  const [appearance, setAppearance] = useAtom(appearanceAtom);
   
   return (
     <Form {...form}>

@@ -7,9 +7,9 @@ export const getSocialLinks = async({userid}:{userid:string}) => {
     try {
         await DbConnect();
         const findSocialLinks = await Social.find({
-            userid: userid
+            userid,
         })
-        return findSocialLinks;
+        return JSON.parse(JSON.stringify(findSocialLinks));
     } catch (error) {
         console.log(error);
     }

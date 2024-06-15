@@ -8,8 +8,8 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  console.log('Request Path:', path);
-  console.log('Token:', token);
+  // console.log('Request Path:', path);
+  // console.log('Token:', token);
 
   const publicPaths = [
     '/',

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, use } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -13,21 +13,19 @@ import TheDialog from "@/components/Admin/Dashboard/Links/TheDialog";
 import toast from "react-hot-toast";
 import NoProfileFound from "@/components/Admin/Dashboard/NoProfileFound";
 import { saveNormalLinks } from "@/actions/save.normal.links";
-import UseNormalLinks from "@/shared/hooks/useNormalLinks";
-import { normalLinks, normalLinksAtom, normalLinks as normalLinksType} from "@/lib/store";
+import {
+  normalLinksAtom,
+  normalLinks as normalLinksType,
+} from "@/lib/store";
 import { ObjectId } from "mongoose";
 import { deleteNormalLinks } from "@/actions/delete.normal.link";
 import { useAtom } from "jotai";
+import { useSession } from "next-auth/react";
 
 function Page() {
-
-  const { data, loading } = UseNormalLinks();
-  const [normalLinks, setNormalLinks] = useAtom<normalLinks[]>(normalLinksAtom);
-  const [items, setItems] = useState<normalLinksType[]>(data);
-  useEffect(() => {
-    setItems(data);
-  }, [data]);
-
+  const [normalLinks, setNormalLinks] = useAtom(normalLinksAtom);
+  const [items, setItems] = useState<normalLinksType[]>([]);
+  const { data: session, status } = useSession();
   const handleOnDragEnd = (result: DropResult) => {
     // Implement your logic for handling drag end here
     console.log("Drag Ended");
@@ -50,11 +48,18 @@ function Page() {
     console.log("Items Reordered:", itemsCopy);
   };
 
+  useEffect(() => {
+    if (normalLinks) {
+      setItems(normalLinks);
+    }
+  }, [normalLinks]);
+  
+  const userid = session?.user?.email;
   const grid = 8;
   // child functions
   const handleDeleteLink = async (_id: ObjectId) => {
     try {
-      const res = await deleteNormalLinks(JSON.parse(JSON.stringify(_id)));
+      const res = await deleteNormalLinks(JSON.parse(JSON.stringify(_id)),JSON.parse(JSON.stringify(userid)));
       setItems([...items.filter((item) => item._id !== _id)]);
       setNormalLinks([...normalLinks.filter((item) => item._id !== _id)]);
       toast.success("Link deleted successfully");
@@ -63,21 +68,26 @@ function Page() {
     }
   };
 
-  const handleCreateLink = async (newNormalLink:normalLinks) => {
+  const handleCreateLink = async (newNormalLink: normalLinksType) => {
+    newNormalLink.userid = userid || "";
     try {
-      const res = await saveNormalLinks(JSON.parse(JSON.stringify(newNormalLink)));
-      setItems([...items, newNormalLink]);
-      setNormalLinks([...normalLinks, newNormalLink]);
+      const res = await saveNormalLinks(
+        JSON.parse(JSON.stringify(newNormalLink))
+      );
+      setItems([...items, res]);
+      setNormalLinks([...normalLinks, res]);
       toast.success("Link created successfully");
     } catch (err) {
       toast.error("Error creating link");
     }
   };
 
-
   const handleUpdateLink = async (updatedLink: normalLinksType) => {
+    updatedLink.userid = userid || "";
     try {
-      const res = await saveNormalLinks(JSON.parse(JSON.stringify(updatedLink)));
+      const res = await saveNormalLinks(
+        JSON.parse(JSON.stringify(updatedLink))
+      );
       setItems((prevItems) =>
         prevItems.map((element) =>
           element._id === updatedLink._id ? updatedLink : element
@@ -94,7 +104,6 @@ function Page() {
     }
   };
   
-
   return (
     <section className="flex flex-col gap-3">
       <div className="flex flex-row justify-between items-center w-full">
@@ -112,11 +121,13 @@ function Page() {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver)}
               >
-                {items.length!=0 ? (
+                
+                {
+                items.length != 0 ? (
                   items.map((link, index) => (
                     <Draggable
                       key={index}
-                      draggableId={link.userid}
+                      draggableId={(index+1).toString()}
                       index={index}
                     >
                       {(provided, snapshot) => (
@@ -126,7 +137,7 @@ function Page() {
                           {...provided.dragHandleProps}
                         >
                           <TheLink
-                            key={index}
+                            key={index+1}
                             normalLinks={link}
                             onUpdate={handleUpdateLink}
                             onDelete={handleDeleteLink}

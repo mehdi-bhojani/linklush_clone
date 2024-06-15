@@ -6,27 +6,26 @@ import Link from "@/utils/models/link.model";
 import { useAtom } from "jotai";
 
 export const saveNormalLinks = async (normalLinks: any) => {
-
-    const { _id, enabled, title, linkUrl, section, avatarUrl, protection, animation } = normalLinks;
+    const { _id,userid, enabled, title, linkUrl, section, avatarUrl, protection, animation } = normalLinks;
     try {
         // Connect to the database
         await DbConnect();
-        if (_id !== undefined || _id !== null || _id !== "") {
-            console.log(normalLinks);
+        if (_id !== undefined && _id !== null && _id !== "") {
             const findNormalLink = await Link.findById(_id);
-
             if (findNormalLink) {
-                console.log("Normla link found: " + findNormalLink);
                 const updatedNormalLink = await Link.findByIdAndUpdate(_id, { enabled, title, linkUrl, section, avatarUrl, protection, animation }, { new: true });
-                console.log(updatedNormalLink);
-                return JSON.parse(JSON.stringify(updatedNormalLink));
+                console.log("Normal links updated: ");
+                return;
             }
+            console.log("No Normal link found for ID: " + _id);
         }
         // Create a new social link
         const createdNormalLink = await Link.create({
-            userid: "123",
+            userid,
             enabled, title, linkUrl, section, avatarUrl, protection, animation,
         });
+        console.log("normal links created");
+        return JSON.parse(JSON.stringify(createdNormalLink));
 
         // return createdNormalLink;
     } catch (error) {

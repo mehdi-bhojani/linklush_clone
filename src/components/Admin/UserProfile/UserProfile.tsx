@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useAtom } from "jotai";
@@ -12,30 +12,14 @@ import { getTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LockKeyholeOpen } from "lucide-react";
 import RenderSocialIcon from "@/components/userProfile/social.link.icon";
-import UseNormalLinks from "@/shared/hooks/useNormalLinks";
-import UseSocialLinks from "@/shared/hooks/useSocialLinks";
-import useAppearanceData from "@/shared/hooks/useAppearenceData";
-import { Spinner } from "@/components/ui/spinner";
 
-export type UserProfileProps = {
-  userName: string;
-  buttonText: string;
-  buttonUrl: string;
-};
-
-const UserProfile: React.FC<UserProfileProps> = ({
-  userName,
-  buttonText,
-  buttonUrl,
+const UserProfile: React.FC<any> = ({
+  userDetails,
 }) => {
 
   const [appearance] = useAtom(appearanceAtom);
    const [socialLinks] = useAtom(socialLinksAtom);
    const [normalLinks] = useAtom(normalLinksAtom);
-
-useEffect(() => {
-
-},[]);  
 
   let { foreground, background, text } = getTheme(appearance?.theme || "Clean Gray");
 
@@ -58,13 +42,13 @@ useEffect(() => {
             <Avatar className="w-20 h-20">
               <AvatarImage
                 src={avatarUrl}
-                alt={appearance?.name || userName}
+                alt={appearance?.name || userDetails.name}
                 style={{ background: foreground }}
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <h3 className="font-semibold tracking-tight text-lg">
-              {appearance?.name || userName}
+              {appearance?.name || userDetails.name}
             </h3>
             <span className="text-sm">
               {appearance?.description || "Random Description"}
@@ -72,16 +56,16 @@ useEffect(() => {
           </div>
           {appearance?.infoButtonEnable && (
             <div className="my-2">
-              <Link href={appearance?.infoButtonLink || buttonUrl}>
+              <Link href={appearance?.infoButtonLink || userDetails.name}>
                 <Button className="text-slate-600" style={{ background }}>
-                  {appearance?.infoButtonText || buttonText}
+                  {appearance?.infoButtonText || userDetails.name}
                 </Button>
               </Link>
             </div>
           )}
           <div className="flex flex-row gap-2 flex-wrap justify-center items-center w-1/2">
-            {socialLinks.map((link, index) => (
-              <Link key={index} href={link.socialLink} target="_blank">
+            {socialLinks.length>0 && socialLinks.map((link, index) => (
+              link.enabled && <Link key={index} href={link.socialLink} target="_blank">
                 <RenderSocialIcon iconName={link.platform} />
               </Link>
             ))}

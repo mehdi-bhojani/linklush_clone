@@ -11,46 +11,44 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSkelton from "./ThemeSkelton";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { Appearance } from "@/lib/store";
 interface ThemeSkeletonProps {
   foreground: string;
   background: string;
   text: string;
 }
-import { useAtom } from "jotai";
-import { appearanceAtom } from "@/lib/store";
-import useAppearanceData from "@/shared/hooks/useAppearenceData";
-import { saveApearance } from "@/actions/save.appearance";
 
-export function TheTabs() {
-  const {data, loading} = useAppearanceData();
+interface tabsProps {
+  appearance: Appearance;
+  updateAppearance: (getAppearance: Appearance) => void;
+}
+
+export const TheTabs: React.FC<tabsProps> = (props) => {
   let [currTheme, setCurrentTheme] = useState("Clean Gray");
   let [updateDisabled, setupdateDisabled] = useState(true);
-  const [appearance, setAppearance] = useAtom(appearanceAtom);
 
-  useEffect(()=>{
-    setCurrentTheme((data as any)[0]?.theme);
-  },[data])
+  useEffect(() => {
+    setCurrentTheme(props.appearance?.theme);
+  }, [props.appearance]);
 
-  const handleSubmit = async() => {
-        //update atom
+  const handleSubmit = async () => {
+    //update atom
     const newAppearance = {
-        ...appearance,
-        theme: currTheme,
-        lastbackground: "theme",
+      ...props.appearance,
+      userid: "",
+      theme: currTheme,
+      lastbackground: "theme",
     };
-    await setAppearance(newAppearance);    
-    await saveApearance(newAppearance);
-    toast.success(`Theme updated to ${currTheme}`);
+
+    props.updateAppearance(newAppearance);
     setupdateDisabled(true);
   };
 
-  const handleThemeChange = async(theme: string) => {
+  const handleThemeChange = async (theme: string) => {
     setCurrentTheme(theme);
     setupdateDisabled(false);
   };
 
-  
   return (
     <Tabs defaultValue="Basic" className="w-full">
       <div className="flex flex-row gap-2 flex-start bg-slate-100 p-2 items-center">
@@ -115,4 +113,4 @@ export function TheTabs() {
       </TabsContent>
     </Tabs>
   );
-}
+};

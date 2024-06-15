@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const appearanceSchema = new Schema({
     userid: {
-        type: Number,
+        type: String,
     },
     name: {
         type: String,

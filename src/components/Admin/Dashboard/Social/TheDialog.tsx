@@ -52,6 +52,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { saveSocialLinks } from "@/actions/save.social.links";
+import { useAtom } from "jotai";
+import { socialLinksAtom } from "@/lib/store";
 
 interface SocialProfile {
   icon: string; // Assuming icon is a string representing the icon name
@@ -125,6 +127,8 @@ const socialProfiles: SocialProfile[] = [
   },
 ];
 
+
+
 const formSchema = z.object({
   platform: z.string(),
   socialLink: z.string().url(),
@@ -135,6 +139,12 @@ interface ChildComponentProps {
 
 const TheDialog: React.FC<ChildComponentProps> = ({ onCreate }) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const [socialLinks, setSocialLinks] = useAtom(socialLinksAtom);
+  const allUniquePlatforms = socialLinks.map((currElem) => currElem.platform);
+  const filterSocialProfiles = socialProfiles.filter((currElem) => {
+    return !allUniquePlatforms.includes(currElem.name);
+});
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -145,7 +155,6 @@ const TheDialog: React.FC<ChildComponentProps> = ({ onCreate }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) =>{
 
-    console.log(values);
     const newLink = {
       platform: values.platform,
       socialLink: values.socialLink,
@@ -199,7 +208,7 @@ const TheDialog: React.FC<ChildComponentProps> = ({ onCreate }) => {
                                   <SelectValue placeholder="Select a Platform" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {socialProfiles.map((currElem, index) => (
+                                  {filterSocialProfiles.map((currElem, index) => (
                                     <SelectItem
                                       key={index}
                                       value={currElem.name}

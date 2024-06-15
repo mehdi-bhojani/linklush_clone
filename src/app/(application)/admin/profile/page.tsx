@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import PropTypes from "prop-types";
 import { any } from "zod";
 import PageTitle from "@/components/Admin/Dashboard/PageTitle";
 import { ProfileForm } from "@/components/Admin/Dashboard/Profile/ProfileForm";
 import TheDialog from "@/components/Admin/Dashboard/Profile/TheDialog";
 
-function Page(props: any) {
+const Page:React.FC = () =>{
+
     return (
         <div className="flex gap-2 flex-col">
             <PageTitle tittle="Profile" />
@@ -41,6 +41,5 @@ function Page(props: any) {
     );
 }
 
-Page.propTypes = { any };
 
 export default Page;

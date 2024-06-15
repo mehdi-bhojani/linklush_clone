@@ -16,9 +16,9 @@ const DbConnect = async () => {
   }
 
   try {
-    mongoose.connect(MONGODB_URI!, {
+    await mongoose.connect(MONGODB_URI!, {
       dbName: "linklush",
-      bufferCommands: false,
+      bufferCommands: true,
     });
     console.log("Connected");
   } catch (error) {

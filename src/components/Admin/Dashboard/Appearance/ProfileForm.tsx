@@ -15,38 +15,38 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { useAtom } from "jotai";
-import { Appearance, appearanceAtom } from "@/lib/store";
+import { Appearance } from "@/lib/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import useAppearanceData from "@/shared/hooks/useAppearenceData";
 import { profileFormSchema } from "@/lib/formSchema/appearance.schema";
-import { saveApearance } from "@/actions/save.appearance";
 
-export const ProfileForm = () => {
-  const [appearance, setAppearance] = useAtom(appearanceAtom);
+interface ProfilerProps {
+  appearance: Appearance;
+  updateAppearance: (getAppearance: Appearance) => void;
+}
+
+export const ProfileForm: React.FC<ProfilerProps> = (props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
-  const { data, loading } = useAppearanceData();
   const [updateDisabled, setupdateDisabled] = useState(true);
 
   useEffect(() => {
-    formMethods.setValue("publicName", (data as any)[0]?.name);
-    formMethods.setValue("description", (data as any)[0]?.description);
-    setChecked((data as any)[0]?.infoButtonEnable);
-    formMethods.setValue("infoButtonText", (data as any)[0]?.infoButtonText);
-    formMethods.setValue("infoButtonLink", (data as any)[0]?.infoButtonLink);
-    (data as any)[0]?.avatar != ""
-      ? setPreviewUrl((data as any)[0]?.avatar)
+    formMethods.setValue("publicName", props.appearance?.name);
+    formMethods.setValue("description", props.appearance?.description);
+    setChecked(props.appearance?.infoButtonEnable);
+    formMethods.setValue("infoButtonText", props.appearance?.infoButtonText);
+    formMethods.setValue("infoButtonLink", props.appearance?.infoButtonLink);
+    props.appearance?.avatar != "" && props.appearance?.avatar != undefined
+      ? setPreviewUrl(`/avatars/${props.appearance?.avatar}`)
       : "";
-  }, [data]);
+  }, [props.appearance]);
 
   const defaultValues = {
     publicName: "",
     description: "",
-    infoButtonEnable: true,
+    infoButtonEnable: false,
     infoButtonText: "",
     infoButtonLink: "",
   };
@@ -69,54 +69,39 @@ export const ProfileForm = () => {
         });
 
         if (response.ok) {
-          const newAppearance = {
-            ...appearance,
+          const newAppearance: Appearance = {
+            ...props.appearance,
+            userid: "",
             name: data.publicName,
-            description: data.description || data.description,
+            description: data.description,
             avatar: uniqueFileName,
-            infoButtonEnable:
-              data.infoButtonEnable !== undefined
-                ? data.infoButtonEnable
-                : data.infoButtonEnable,
-            infoButtonText: data.infoButtonText || data.infoButtonText,
-            infoButtonLink: data.infoButtonLink || data.infoButtonLink,
+            infoButtonEnable: data.infoButtonEnable,
+            infoButtonText: data.infoButtonText,
+            infoButtonLink: data.infoButtonLink,
           };
 
-          await saveApearance(JSON.parse(JSON.stringify(newAppearance))).then(() => {
-            setAppearance(newAppearance);
-            toast.success("File uploaded successfully");
-          }).catch(() => {
-            toast.error("Failed to upload file");
-          });
-        
+          await props.updateAppearance(newAppearance);
+          return;
         } else {
           toast.error("Failed to upload file");
-          
         }
       } catch (error) {
         console.error("Error uploading file:", error);
         toast.error("Failed to upload file");
-        
       }
     } else {
-      const newAppearance = {
-        ...appearance,
+      const newAppearance: Appearance = {
+        ...props.appearance,
+        userid: "",
         name: data.publicName,
-        description: data.description || data.description,
+        description: data.description,
         avatar: "",
-        infoButtonEnable:
-          data.infoButtonEnable !== undefined
-            ? data.infoButtonEnable
-            : data.infoButtonEnable,
-        infoButtonText: data.infoButtonText || data.infoButtonText,
-        infoButtonLink: data.infoButtonLink || data.infoButtonLink,
+        infoButtonEnable: data.infoButtonEnable,
+        infoButtonText: data.infoButtonText,
+        infoButtonLink: data.infoButtonLink,
       };
-      await saveApearance(JSON.parse(JSON.stringify(newAppearance))).then(() => {
-        setAppearance(newAppearance);
-        toast.success("Submission Successful");
-      }).catch(() => {
-        toast.error("Failed to upload file");
-      });
+      props.updateAppearance(newAppearance);
+      return;
     }
     setupdateDisabled(true);
   };
@@ -130,11 +115,6 @@ export const ProfileForm = () => {
   };
 
   const handleRemoveImage = () => {
-    // const newAppearance = {
-    //   ...appearance,
-    //   avatar: "",
-    // };
-    // setAppearance(newAppearance);
     setFile(null);
     setPreviewUrl(null);
   };
@@ -275,7 +255,9 @@ export const ProfileForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={updateDisabled} >Update</Button>
+        <Button type="submit" disabled={updateDisabled}>
+          Update
+        </Button>
       </form>
     </Form>
   );

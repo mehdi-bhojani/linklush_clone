@@ -8,11 +8,10 @@ import FaqsSection from "@/components/website/home/FaqsSection";
 export default function Home() {
   return (
     <>
-      {/*  <HeroSection /> */}
-      {/*  <FeaturesSection />
-       */}
+       <HeroSection />
+       <FeaturesSection />
       {/*     {<GrowAudienceSection />} */} {/* problem */}
-      {/*  <UnderstandAudienceSection /> */}
+       <UnderstandAudienceSection />
       <IntegrationSection />
       <FaqsSection />
     </>

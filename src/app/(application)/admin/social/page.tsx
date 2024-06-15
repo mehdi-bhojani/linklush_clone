@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import {
   DragDropContext,
@@ -8,9 +9,8 @@ import {
 } from "react-beautiful-dnd";
 import PageTitle from "@/components/Admin/Dashboard/PageTitle";
 import TheLink from "@/components/Admin/Dashboard/Social/TheLink";
-import {  getListStyle } from "@/lib/links/utils";
+import { getListStyle } from "@/lib/links/utils";
 import TheDialog from "@/components/Admin/Dashboard/Social/TheDialog";
-import UseSocialLinks from "@/shared/hooks/useSocialLinks";
 import { deleteSocialLinks } from "@/actions/delete.social.link";
 import { saveSocialLinks } from "@/actions/save.social.links";
 import toast from "react-hot-toast";
@@ -18,27 +18,14 @@ import NoProfileFound from "@/components/Admin/Dashboard/NoProfileFound";
 import { useAtom } from "jotai";
 import { socialLinksAtom } from "@/lib/store";
 import { socialLinks as Link } from "@/lib/store";
+import { useSession } from "next-auth/react";
 
 function Page() {
-  // type Link = {
-  //   userid: string;
-  //   platform: string;
-  //   socialLink: string;
-  //   clicks: number;
-  //   clickThroughRate: number;
-  //   enabled: boolean;
-  // };
-
-  const { data, loading } = UseSocialLinks();
-  const [items, setItems] = useState<Link[]>(data);
+  const [items, setItems] = useState<Link[]>([]);
   const [socialLinks, setSocialLinks] = useAtom<Link[]>(socialLinksAtom);
-  useEffect(() => {
-    setItems(data);
-  }, [data]);
+  const { data: session, status } = useSession();
 
   const handleOnDragEnd = (result: DropResult) => {
-    // Implement your logic for handling drag end here
-    console.log("Drag Ended");
     const { destination, source } = result;
 
     if (
@@ -53,18 +40,22 @@ function Page() {
     const [reorderedItem] = itemsCopy.splice(source.index, 1);
     itemsCopy.splice(destination.index, 0, reorderedItem);
 
-    // Update the items state with the new order
     setItems(itemsCopy);
-    console.log("Items Reordered:", itemsCopy);
   };
 
-  const grid = 8;
-  //child functions
+  useEffect(() => {
+    if (socialLinks) {
+      setItems(socialLinks);
+    }
+  }, [socialLinks]);
+
   const handleDeleteLink = async (platform: string) => {
     try {
-      const res = await deleteSocialLinks(JSON.parse(JSON.stringify(platform)));
-      setItems([...items.filter((item) => item.platform !== platform)]);
-      setSocialLinks([...socialLinks.filter((socialLinks) => socialLinks.platform !== platform)]);
+      const userid = session?.user?.email || "";
+      await deleteSocialLinks(platform, userid);
+      const filteredItems = items.filter((item) => item.platform !== platform);
+      setItems(filteredItems);
+      setSocialLinks(filteredItems);
       toast.success("Link deleted successfully");
     } catch (err) {
       toast.error("Error deleting link");
@@ -73,11 +64,14 @@ function Page() {
 
   const handleCreateLink = async (newLink: Link) => {
     try {
-      const res = await saveSocialLinks(JSON.parse(JSON.stringify(newLink)));
-      setItems([...items, newLink]);
-      setSocialLinks([...socialLinks, newLink]);
-      console.log("socialLinks");
-      console.log(socialLinks);
+      const toCreateLink = {
+        ...newLink,
+        userid: session?.user?.email || "",
+      };
+      const res = await saveSocialLinks(JSON.parse(JSON.stringify(toCreateLink)));
+      const newItems = [...items, res];
+      setItems(newItems);
+      setSocialLinks(newItems);
       toast.success("Link created successfully");
     } catch (err) {
       toast.error("Error creating link");
@@ -86,23 +80,34 @@ function Page() {
 
   const handleUpdateLink = async (updatedLink: Link) => {
     try {
-      const res = await saveSocialLinks(JSON.parse(JSON.stringify(updatedLink)));
-      setItems((prevItems) =>
-        prevItems.map((element) =>
-          element.platform === updatedLink.platform ? updatedLink : element
-        )
+      const toUpdateLink = {
+        ...updatedLink,
+        userid: session?.user?.email || "",
+      };
+      const res = await saveSocialLinks(JSON.parse(JSON.stringify(toUpdateLink)));
+      setItems((prev) => {
+        return prev.map((item) => {
+          if (item.platform === toUpdateLink.platform) {
+            return toUpdateLink;
+          }
+          return item;
+        });
+      });
+      setSocialLinks(
+        items.map((item) => {
+          if (item.platform === toUpdateLink.platform) {
+            return toUpdateLink;
+          }
+          return item;
+        })
       );
-      setSocialLinks((prevItems) =>
-        prevItems.map((element) =>
-          element.platform === updatedLink.platform ? updatedLink : element
-        )
-      );
+      console.log("social:", socialLinks);
+      console.log("ites:", items);
       toast.success("Link updated successfully");
     } catch (err) {
       toast.error("Error updating link");
     }
   };
-  
 
   return (
     <section className="flex flex-col gap-3">
@@ -121,11 +126,11 @@ function Page() {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver)}
               >
-                {items.length!=0 ? (
+                {items.length ? (
                   items.map((link, index) => (
                     <Draggable
-                      key={link.userid}
-                      draggableId={link.userid}
+                      key={link.platform} // Ensure unique key
+                      draggableId={link.platform}
                       index={index}
                     >
                       {(provided, snapshot) => (
@@ -135,11 +140,12 @@ function Page() {
                           {...provided.dragHandleProps}
                         >
                           <TheLink
+                            key={link.platform} // Ensure unique key
                             platform={link.platform}
                             socialLink={link.socialLink}
                             clicks={link.clicks}
                             ctr={link.clickThroughRate}
-                            enabled={link.enabled}
+                            enabled={link?.enabled}
                             onDelete={handleDeleteLink}
                             onUpdate={handleUpdateLink}
                           />
@@ -153,7 +159,6 @@ function Page() {
                     <h1 className="text-xl">No Social Profile Found</h1>
                   </div>
                 )}
-
                 {provided.placeholder}
               </div>
             )}
