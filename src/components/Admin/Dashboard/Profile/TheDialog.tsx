@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -13,21 +12,23 @@ import {
   DialogClose,
 } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/button";
+import { on } from "events";
 
-const TheDialog: React.FC = () => {
+interface MyProps {
+  onDelete: () => void;  
+}
+
+const TheDialog: React.FC<MyProps> = (props) => {
+
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
   const closeDialog = () => setIsOpen(false);
 
-  const router = useRouter();
-
   const handleSubmit = async () => {
     // Delete account logic here
-    await console.log("Deleted account");
-    // Redirect
-    router.push("/");
     closeDialog();
+    props.onDelete();
   };
 
   return (

@@ -95,7 +95,7 @@ const config: Config = {
             maxWidth: "1024px",
           },
           "@screen xl": {
-            maxWidth: "1280px",
+            maxWidth: "1500px",
           },
           "@screen 2xl": {
             maxWidth: "1500px",

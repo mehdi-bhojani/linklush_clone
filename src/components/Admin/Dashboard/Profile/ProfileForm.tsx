@@ -16,58 +16,52 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
+import { useState } from "react"
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "name must be at least 2 characters.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
 })
 
-export function ProfileForm() {
+interface profileProps {
+  name: string;
+  email: string;
+  onUpdate: (data: any) => void;
+}
+
+export const ProfileForm:React.FC<profileProps> = (props) => {
+  const [updateDisabled, setupdateDisabled] = useState(true);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
-      email: "",
+      name: props.name,
+      email: props.email,
     },
   })
 
-  const { toast } = useToast()  // Destructure toast from useToast
   
   function onSubmit(data: z.infer<typeof FormSchema>) {
-
     console.log("Form submitted with data:", data);
-    const sanitizedData = {
-      username: data.username,
-      email: data.email,
-    }
-
-    toast({
-      variant: "success",
-      title: "Submission Successful",
-    })
-    form.reset();
-  
+    props.onUpdate(data);
+    setupdateDisabled(true);
+    
   }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onChange={() => setupdateDisabled(false)} onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="your name" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -79,16 +73,13 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="your email" {...field} />
+                <Input placeholder="your email" {...field} disabled={true} />
               </FormControl>
-              <FormDescription>
-                This is your email.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button disabled={updateDisabled} type="submit">Update</Button>
       </form>
     </Form>
   )

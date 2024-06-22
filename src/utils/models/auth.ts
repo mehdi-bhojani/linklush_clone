@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { nullable } from "zod";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -9,6 +10,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "please provide a valid email"],
     unique: true,
+  },
+  username: {
+    type: String,
+    unique: true,
+    nullable: true,
+    default: null,
   },
   password: {
     type: String,

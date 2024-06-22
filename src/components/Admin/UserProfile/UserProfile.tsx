@@ -6,22 +6,33 @@ import {
   appearanceAtom,
   normalLinksAtom,
   socialLinksAtom,
+  videoLinksAtom,
 } from "../../../lib/store";
 import UserProfileLogo from "./UserProfileLogo";
 import { getTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LockKeyholeOpen } from "lucide-react";
 import RenderSocialIcon from "@/components/userProfile/social.link.icon";
+import ReactPlayer from "react-player";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Image from "next/image";
 
-const UserProfile: React.FC<any> = ({
-  userDetails,
-}) => {
-
+const UserProfile: React.FC<any> = ({ userDetails }) => {
   const [appearance] = useAtom(appearanceAtom);
-   const [socialLinks] = useAtom(socialLinksAtom);
-   const [normalLinks] = useAtom(normalLinksAtom);
+  const [socialLinks] = useAtom(socialLinksAtom);
+  const [normalLinks] = useAtom(normalLinksAtom);
+  const [videoLinks] = useAtom(videoLinksAtom);
 
-  let { foreground, background, text } = getTheme(appearance?.theme || "Clean Gray");
+  let { foreground, background, text } = getTheme(
+    appearance?.theme || "Clean Gray"
+  );
 
   if (appearance?.lastbackground === "color") {
     background = appearance?.bgColor;
@@ -64,11 +75,15 @@ const UserProfile: React.FC<any> = ({
             </div>
           )}
           <div className="flex flex-row gap-2 flex-wrap justify-center items-center w-1/2">
-            {socialLinks.length>0 && socialLinks.map((link, index) => (
-              link.enabled && <Link key={index} href={link.socialLink} target="_blank">
-                <RenderSocialIcon iconName={link.platform} />
-              </Link>
-            ))}
+            {socialLinks.length > 0 &&
+              socialLinks.map(
+                (link, index) =>
+                  link.enabled && (
+                    <Link key={index} href={link.socialLink} target="_blank">
+                      <RenderSocialIcon iconName={link.platform} />
+                    </Link>
+                  )
+              )}
           </div>
         </div>
 
@@ -103,6 +118,30 @@ const UserProfile: React.FC<any> = ({
                 )}
               </div>
             </a>
+          ))}
+        </div>
+        <div className="flex gap-4 flex-wrap justify-center items-stretch ">
+          {videoLinks.map((link, index) => (
+            <>
+              <Card className="flex flex-col justify-around gap-4" style={{background:foreground, width: 'calc(50% - 10px)' }}>
+                <CardContent className="p-3 rounded-lg">
+                  <div className="w-8/10">
+                    {/* <Image src={link.avatarUrl} alt={link.title} className="w-full h-full" /> */}
+                  <ReactPlayer
+                    light={<img src={link.avatarUrl || "/placeholder-image.jpg"} alt={link.title} />}
+                    url={link.videoUrl}
+                    width="100%"
+                    height="100%"
+                    playing={false}
+                  />
+                  </div>
+                  <h1 className="py-2 text-md">{link.title}</h1>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button className="w-full text-slate-600" style={{background}}><Link href={link.videoUrl} target="_blank">Open in App</Link></Button>
+                </CardFooter>
+              </Card>
+            </>
           ))}
         </div>
         {!appearance?.hideBranding && <UserProfileLogo />}

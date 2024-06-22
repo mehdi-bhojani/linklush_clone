@@ -30,6 +30,7 @@ export async function middleware(req: NextRequest) {
     '/admin/analytics',
     '/admin/appearance',
     '/admin/settings',
+    '/admin/profile',
   ];
 
   const authenticationForm = [

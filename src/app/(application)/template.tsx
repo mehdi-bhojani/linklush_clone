@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import UserProfile from "@/components/Admin/UserProfile/UserProfile";
 import Loading from "@/components/Loading";
+import UseVideoLinks from "@/shared/hooks/useVideoLinks";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({
     UseSocialLinks();
   const { data: appearanceData, loading: appearanceLoading } =
     useAppearanceData();
+  const {data: videoLinksData, loading: videoLinkLoading} = UseVideoLinks();
 
   const currentUser = {
     name: session?.user?.name || "",
@@ -56,8 +58,8 @@ export default function RootLayout({
   };
   const [loading, setLoading] = useState(true );
   useEffect(() => {
-    setLoading(normalLinksLoading || socialLinksLoading || appearanceLoading);
-  }, [normalLinksLoading, socialLinksLoading, appearanceLoading]);
+    setLoading(normalLinksLoading || socialLinksLoading || appearanceLoading || videoLinkLoading);
+  }, [normalLinksLoading, socialLinksLoading, appearanceLoading,videoLinkLoading]);
   return (
     <html lang="en" className="light">
       <body
@@ -98,7 +100,7 @@ export default function RootLayout({
               <main className="flex-1 p-6 hidden md:flex">
                 <section className="flex-1 p-2">{children}</section>
 
-                <section className="flex-1 md:border-l md:block w-full h-screen">
+                <section className="flex-1 md:border-l md:block w-full m-h-screen">
                   <UserProfile
                     appearance={appearanceData}
                     normalLinks={normalLinksData}

@@ -11,6 +11,7 @@ function page() {
       <SeoSection />
       <UserName />
       <SubscribeSection />
+      
     </>
   );
 }

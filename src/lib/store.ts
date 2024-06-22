@@ -20,6 +20,25 @@ export interface normalLinks {
       code?: string;
     };
   }
+export interface videoLinks {
+    _id: ObjectId;
+    userid: string;
+    videoUrl: string;
+    title: string;
+    click?: number;
+    clickThroughRate?: number;
+    enabled?: boolean;
+    animation?: {
+      animationType?: string;
+      iterationCount?: number;
+    };
+    avatarUrl?: string;
+    section?: string;
+    protection?: {
+      protectionType?: string;
+      code?: string;
+    };
+  }
 // Standard interface and functions
 export interface Appearance {
     id: number;
@@ -49,6 +68,7 @@ export interface socialLinks {
 
 export interface user {
   name: string;
+  username: string;
   email: string;
   image: string;
 }
@@ -73,7 +93,13 @@ export const appearanceAtom = atom<Appearance>({
 //Atom to hold a list of socialLinks
 export const socialLinksAtom = atom<socialLinks[]>([]);
 export const normalLinksAtom = atom<normalLinks[]>([]);
-export const userAtom = atom<user>({  name: '', email: '',image:'' });
+export const videoLinksAtom = atom<videoLinks[]>([]);
+export const userAtom = atom<user>({
+  name: '',
+  username: '',
+  email: '',
+  image: ''
+});
 
 
 
