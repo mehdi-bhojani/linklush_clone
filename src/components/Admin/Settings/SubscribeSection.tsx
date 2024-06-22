@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,47 +29,73 @@ const FormSchema = z.object({
   webhookurl: z.string().min(2, {
     message: "url must be added",
   }),
-  subscribeButton: z.boolean(),
+  enabled: z.boolean(),
   collectPhoneNumber: z.boolean(),
 });
 
-function SubscribeSection() {
+interface myProps {
+  setting: any;
+  onUpdate: (setting:any) => void;
+}
+
+const SubscribeSection:React.FC<myProps> = (props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      subscribe: "",
-      description: "",
-      webhookurl: "",
-      subscribeButton: false,
-      collectPhoneNumber: false,
+      subscribe: props.setting?.subscription?.subscribe || "",
+      description: props.setting?.subscription?.description || "",
+      webhookurl: props.setting?.subscription?.webhookurl || "",
+      enabled: props.setting?.subscription?.enabled || false,
+      collectPhoneNumber: props.setting?.subscription?.collectPhoneNumber || false,
     },
     mode: "onChange", // validate on change
   });
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
-  useEffect(() => {
-    setButtonDisabled(!form.formState.isValid);
-  }, [form.formState.isValid]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log("form submitted", data);
+    const newSetting = {
+      ...props.setting,
+      subscription: {
+        ...props.setting.subscription,
+        subscribe: data.subscribe,
+        description: data.description,
+        webhookurl: data.webhookurl,
+        enabled: data.enabled,
+        collectPhoneNumber: data.collectPhoneNumber,
+      },
+    };
+    props.onUpdate(newSetting);
+    setButtonDisabled(true);
   }
+
+  useEffect(() => {
+    form.reset({
+      subscribe: props.setting?.subscription?.subscribe || "",
+      description: props.setting?.subscription?.description || "",
+      webhookurl: props.setting?.subscription?.webhookurl || "",
+      enabled: props.setting?.subscription?.enabled || false,
+      collectPhoneNumber: props.setting?.subscription?.collectPhoneNumber || false,
+    });
+  }, [props.setting]);
 
   return (
     <div className="border rounded-md p-4 mt-4 relative">
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between">
+      {/* <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between">
         <PremiumCard />
-      </div>
+      </div> */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-6 blur-[2px]"
+          className="w-full space-y-6 "
+          onChange={() => setButtonDisabled(false)}
         >
           <FormLabel className="font-bold">Subscribe</FormLabel>
           <FormField
             control={form.control}
-            name="subscribeButton"
+            name="enabled"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
                 <FormLabel>Subscribe</FormLabel>

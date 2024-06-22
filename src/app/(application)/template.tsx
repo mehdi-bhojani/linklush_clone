@@ -20,6 +20,7 @@ import { Toaster } from "react-hot-toast";
 import UserProfile from "@/components/Admin/UserProfile/UserProfile";
 import Loading from "@/components/Loading";
 import UseVideoLinks from "@/shared/hooks/useVideoLinks";
+import useSettingData from "@/shared/hooks/useSetting";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -49,7 +50,10 @@ export default function RootLayout({
     UseSocialLinks();
   const { data: appearanceData, loading: appearanceLoading } =
     useAppearanceData();
-  const {data: videoLinksData, loading: videoLinkLoading} = UseVideoLinks();
+  const {data: videoLinksData, loading: videoLinkLoading} = 
+  UseVideoLinks();
+  const {data: settingData, loading : settingLoading} = 
+  useSettingData();
 
   const currentUser = {
     name: session?.user?.name || "",
@@ -58,8 +62,8 @@ export default function RootLayout({
   };
   const [loading, setLoading] = useState(true );
   useEffect(() => {
-    setLoading(normalLinksLoading || socialLinksLoading || appearanceLoading || videoLinkLoading);
-  }, [normalLinksLoading, socialLinksLoading, appearanceLoading,videoLinkLoading]);
+    setLoading(normalLinksLoading || socialLinksLoading || appearanceLoading || videoLinkLoading || settingLoading);
+  }, [normalLinksLoading, socialLinksLoading, appearanceLoading,videoLinkLoading,settingLoading]);
   return (
     <html lang="en" className="light">
       <body

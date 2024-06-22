@@ -73,6 +73,22 @@ export interface user {
   image: string;
 }
 
+export interface ISetting {
+  userid: string;
+  seo?: {
+    title?: string;
+    description?: string;
+  };
+  userName: string;
+  subscription?: {
+    enabled: boolean;
+    collectPhoneNumber: boolean;
+    subscribe?: string;
+    description?: string;
+    webhookurl?: string;
+  };
+}
+
 // Atom to hold a single Appearance object
 export const appearanceAtom = atom<Appearance>({
     id: 0,
@@ -93,6 +109,22 @@ export const appearanceAtom = atom<Appearance>({
 //Atom to hold a list of socialLinks
 export const socialLinksAtom = atom<socialLinks[]>([]);
 export const normalLinksAtom = atom<normalLinks[]>([]);
+export const settingAtom = atom<ISetting>({
+  userid: "",
+  userName: "",
+  subscription: {
+    enabled: false,
+    collectPhoneNumber: false,
+    subscribe: "",
+    description: "",
+    webhookurl: "",
+  },
+  seo: {
+    title: "",
+    description: "",
+  },
+});
+
 export const videoLinksAtom = atom<videoLinks[]>([]);
 export const userAtom = atom<user>({
   name: '',

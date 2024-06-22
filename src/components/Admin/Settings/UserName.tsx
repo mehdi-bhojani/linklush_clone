@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from '@/components/ui/textarea';
+import { ISetting } from '@/lib/store';
 
 
 const FormSchema = z.object({
@@ -25,30 +26,42 @@ const FormSchema = z.object({
 
 })
 
-function SeoSection() {
-    const form = useForm<z.infer<typeof FormSchema>>({
+interface myProps {
+    setting: ISetting;
+    onUpdate: (setting:ISetting) => void;
+  }
+
+  const UserName:React.FC<myProps> = (props) => {
+      const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            userName: "",
-
+            userName: props.setting?.userName || "",
         },
         mode: "onChange", // validate on change
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
-    useEffect(() => {
-        setButtonDisabled(!form.formState.isValid);
-    }, [form.formState.isValid]);
+    useEffect(()=>{
+        form.reset({
+            userName: props.setting?.userName || "",
+        });
+    },[props.setting]);
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log("form submitted", data);
+        const newSetting = {
+            ...props.setting,
+            userName: data.userName,
+        };
+        props.onUpdate(newSetting);
+        setButtonDisabled(true);
     }
 
     return (
         <div className='border rounded-md p-4 mt-4'>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6" onChange={()=>setButtonDisabled(false)}>
                     <FormField control={form.control} name="userName" render={({ field }) => (
                         <FormItem>
                             <div className='flex flex-col mb-1'>
@@ -69,4 +82,4 @@ function SeoSection() {
     );
 }
 
-export default SeoSection;
+export default UserName;
