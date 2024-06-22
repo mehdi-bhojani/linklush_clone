@@ -21,6 +21,7 @@ import UserProfile from "@/components/Admin/UserProfile/UserProfile";
 import Loading from "@/components/Loading";
 import UseVideoLinks from "@/shared/hooks/useVideoLinks";
 import useSettingData from "@/shared/hooks/useSetting";
+import {ThemeProvider} from "next-themes";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -65,7 +66,8 @@ export default function RootLayout({
     setLoading(normalLinksLoading || socialLinksLoading || appearanceLoading || videoLinkLoading || settingLoading);
   }, [normalLinksLoading, socialLinksLoading, appearanceLoading,videoLinkLoading,settingLoading]);
   return (
-    <html lang="en" className="light">
+    <ThemeProvider enableSystem={true} attribute="class">
+    <html lang="en">
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -142,5 +144,6 @@ export default function RootLayout({
         )}
       </body>
     </html>
+    </ThemeProvider>
   );
 }

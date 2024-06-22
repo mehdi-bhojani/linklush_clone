@@ -18,8 +18,8 @@ export const saveSetting = async (toSetting: ISetting): Promise<ISetting | null>
           const allUserNames = await Setting.find({ userName });
           if (allUserNames.length > 0) {
             console.log("Username already exists:", userName);
-            // throw new Error("Username already exists");
-            return JSON.parse(JSON.stringify({message: "Username already exists"}));
+            throw new Error("Username already exists");
+            // return JSON.parse(JSON.stringify({message: "Username already exists"}));
           }
         }
         // Update the existing setting

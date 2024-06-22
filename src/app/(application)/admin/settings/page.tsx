@@ -23,11 +23,7 @@ function Page() {
       };
     try {
       const response = await saveSetting(toSetting);
-      if(response?.message){
-        toast.error(response.message);
-        return;
-      }
-      if (response) {
+      if(response){
         setSetting(toSetting);
         toast.success("Settings updated successfully!");
       } else {

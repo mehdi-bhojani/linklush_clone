@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../../ui/button";
-import Mode from "./Mode";
+import {Mode} from "@/components/Admin/Header/Mode";
 import Logo from "./Logo";
 import Link from "next/link";
 import { DropdownMenuDemoComponent } from "./DropdownMenuComponent";

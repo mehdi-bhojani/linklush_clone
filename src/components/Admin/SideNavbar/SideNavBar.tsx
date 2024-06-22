@@ -12,6 +12,7 @@ import {
   Settings,
   AppWindow,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -36,9 +37,9 @@ const SideNavBar = () => {
           <Button
             onClick={toggleSidebar}
             variant="secondary"
-            className="rounded-full bg-slate-200 h-[40px] p-2"
+            className="rounded-full bg-slate-200 dark:bg-[#182334] h-[40px] p-2"
           >
-            <ChevronRight />
+            {isCollapsed === true ? <ChevronRight /> : <ChevronLeft />}
           </Button>
         </div>
       )}
