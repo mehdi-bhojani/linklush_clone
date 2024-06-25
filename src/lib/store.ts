@@ -20,6 +20,27 @@ export interface normalLinks {
       code?: string;
     };
   }
+export interface productLinks {
+    _id: ObjectId;
+    userid: string;
+    productUrl: string;
+    salePrice: number;
+    regularPrice: number;
+    title: string;
+    click?: number;
+    clickThroughRate?: number;
+    enabled?: boolean;
+    animation?: {
+      animationType?: string;
+      iterationCount?: number;
+    };
+    avatarUrl?: string;
+    section?: string;
+    protection?: {
+      protectionType?: string;
+      code?: string;
+    };
+  }
 export interface videoLinks {
     _id: ObjectId;
     userid: string;
@@ -126,13 +147,13 @@ export const settingAtom = atom<ISetting>({
 });
 
 export const videoLinksAtom = atom<videoLinks[]>([]);
+export const productLinksAtom = atom<productLinks[]>([]);
 export const userAtom = atom<user>({
   name: '',
   username: '',
   email: '',
   image: ''
 });
-
 
 
 

@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { getNormalLinks } from "@/actions/get.normal.links";
 import { normalLinks, normalLinksAtom } from "@/lib/store";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
-const UseNormalLinks = () => {
+const UseNormalLinks = (clientuserid?: string) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [normalLinks, setNormalLinks] = useAtom(normalLinksAtom);
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   //get user from here
 
-  const userid = session?.user?.email || "";
+  const userid = clientuserid || "";
 
   useEffect(() => {
     GetNormalLinks();

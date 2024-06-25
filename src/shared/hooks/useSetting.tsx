@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { settingAtom } from "@/lib/store";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { getSetting } from "@/actions/get.setting";
 
-const useSettingData = () => {
+const useSettingData = (clientuserid?: string) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [setting,setSetting] = useAtom(settingAtom);
   //get user from here
-  const { data: session, status } = useSession();
-  const userid  = session?.user?.email || "";
+  // const { data: session, status } = useSession();
+  const userid  = clientuserid || "";
 
   useEffect(() => {
     GetSetting();

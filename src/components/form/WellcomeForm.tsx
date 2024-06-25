@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +20,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { findUsername } from "@/actions/find.username";
+import { Spinner } from "../ui/spinner";
+import { saveWelcome } from "@/actions/save.welcome";
+import { saveSetting, saveUsername } from "@/actions/save.setting";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   fullname: z.string().min(1, "fullname required"),
@@ -30,6 +36,10 @@ const FormSchema = z.object({
 });
 
 function WellcomeForm() {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -41,9 +51,33 @@ function WellcomeForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values);
+  const handleUserName = async (value: string) => {
+    setLoading(true);
+    const res = await findUsername(value);
+    if(res == "Username already exists"){
+      await setErrorMessage("Username already exists");
+      setButtonDisable(true);
+    }else{
+      await setErrorMessage("");
+      if (form.formState.isDirty) {
+        setButtonDisable(false);
+      }
+    }
+    setLoading(false);
   };
+
+  const onSubmit = async(values: z.infer<typeof FormSchema>) => {
+    // console.log(values);
+    const newValues = {
+      ...values,
+       userid: "1234"
+    };
+    const res1 = await saveWelcome(newValues);
+    const res2 = await saveUsername({userid: "1234", userName: values.username});
+    toast.success("Welcome to our website");
+    router.push("/admin");
+  };
+
 
   return (
     <Form {...form}>
@@ -65,7 +99,6 @@ function WellcomeForm() {
                 <FormControl>
                   <Input type="text" placeholder="Alice capsy" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -108,7 +141,6 @@ function WellcomeForm() {
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -184,18 +216,29 @@ function WellcomeForm() {
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="relative">
                 <FormLabel>Username (linklu.sh/yourusername)</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="username" {...field} />
+                  <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="username"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e); // This updates the form state
+                      handleUserName(e.target.value); // This logs the input value
+                    }}
+                  />
+                {loading && <Spinner className="absolute right-3 text-gray-600 top-[20%]" size="small"  />} 
+                  </div>
                 </FormControl>
-
                 <FormMessage />
+                <span className="text-red-600">{errorMessage}</span>
               </FormItem>
             )}
           />
         </div>
-        <Button className="w-full mt-6" type="submit">
+        <Button disabled={buttonDisable} className="w-full mt-6" type="submit">
           Continue
         </Button>
       </form>

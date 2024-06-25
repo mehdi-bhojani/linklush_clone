@@ -49,3 +49,18 @@ export const saveSetting = async (toSetting: ISetting): Promise<ISetting | null>
     throw error; // Rethrow the error to handle it elsewhere
   }
 };
+
+export const saveUsername = async ({ userid, userName }: { userid: string; userName: string }): Promise<ISetting | null> => {
+  try {
+    // Connect to the database
+    await DbConnect();
+    const newSetting = await Setting.create({
+      userid,
+      userName,
+    });
+    return null; // Return null if no setting was found
+  } catch (error) {
+    console.error("Error saving username:", error);
+    throw error; // Rethrow the error to handle it elsewhere
+  }
+};
