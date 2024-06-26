@@ -6,6 +6,7 @@ import {
   appearanceAtom,
   normalLinksAtom,
   productLinksAtom,
+  settingAtom,
   socialLinksAtom,
   videoLinksAtom,
 } from "../../../lib/store";
@@ -55,6 +56,7 @@ const UserProfile: React.FC<myProps> = (props) => {
   const [normalLinks] = useAtom(normalLinksAtom);
   const [videoLinks] = useAtom(videoLinksAtom);
   const [productLinks] = useAtom(productLinksAtom);
+  const [settingData] = useAtom(settingAtom);
   const [currentTab, setCurrentTab] = useState("Links");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   let { foreground, background, text } = getTheme(
@@ -168,14 +170,13 @@ const UserProfile: React.FC<myProps> = (props) => {
             {productLinks.map((link, index) => (
               <a
                 key={index}
-                className="w-1/2 sm:w-1/3 px-2"
+                className="w-1/2 p-2"
                 target="_blank"
                 href={link.productUrl}
                 rel="noopener noreferrer"
               >
                 <div
                   className="rounded-lg border border-zinc-200 bg-white text-zinc-950 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 linklush-item linklush-product cursor-pointer hover:bg-opacity-95 transition-colors duration-300 shadow-none border-none overflow-hidden h-full"
-                  id="8801376633122"
                   data-type="product"
                   style={{
                     borderRadius: "var(--productBorderRadius, 10px)",
@@ -197,7 +198,7 @@ const UserProfile: React.FC<myProps> = (props) => {
                         borderRadius: "var(--productBorderRadius, 10px)",
                       }}
                     />
-                    <h3 className="font-semibold tracking-tight text-sm sm:text-base">
+                    <h3 className="font-semibold tracking-tight text-sm sm:text-base truncate">
                       {link.title}
                     </h3>
                     <div className="w-full mt-auto">
@@ -212,6 +213,7 @@ const UserProfile: React.FC<myProps> = (props) => {
                           $ {link?.regularPrice}
                         </h3>
                       </div>
+
                       <button
                         className="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-9 px-4 py-2 w-full self-end mt-3 border-0 text-sm sm:text-base"
                         style={{
@@ -224,6 +226,7 @@ const UserProfile: React.FC<myProps> = (props) => {
                       >
                         Buy now
                       </button>
+
                     </div>
                   </div>
                 </div>
@@ -286,6 +289,7 @@ const UserProfile: React.FC<myProps> = (props) => {
           className="my-5 mx-auto p-4 flex w-[400px] sm:w-[600px] justify-center gap-4 shadow-md rounded-lg"
           style={{ background: foreground }}
         >
+          {normalLinks.length>0 &&  (
           <button
             className="p-2 rounded-lg flex justify-center items-center gap-2 "
             style={{ background }}
@@ -294,6 +298,9 @@ const UserProfile: React.FC<myProps> = (props) => {
             <Link2 />
             <span>{currentTab === "Links" && "Links"}</span>
           </button>
+          )}
+
+          {productLinks.length>0 && (
           <button
             className="p-2 rounded-lg flex justify-center items-center gap-2 "
             style={{ background }}
@@ -302,7 +309,9 @@ const UserProfile: React.FC<myProps> = (props) => {
             <ShoppingBag />
             <span>{currentTab === "Products" && "Products"}</span>
           </button>
+          )}
 
+          {videoLinks.length>0 && (
           <button
             className="p-2 rounded-lg flex justify-center items-center gap-2 "
             style={{ background }}
@@ -311,6 +320,9 @@ const UserProfile: React.FC<myProps> = (props) => {
             <Video />
             <span>{currentTab === "Videos" && "Videos"}</span>
           </button>
+          )}
+
+          {settingData?.subscription?.enabled && (
           <button
             className="p-2 rounded-lg flex justify-center items-center gap-2"
             style={{ background }}
@@ -319,9 +331,9 @@ const UserProfile: React.FC<myProps> = (props) => {
             <BellRing />
             <span></span>
           </button>
+          )}
         </div>
       </div>
-
       {/* drawer */}
       <Drawer open={isDrawerOpen}>
         {/* <DrawerTrigger>Open</DrawerTrigger> */}

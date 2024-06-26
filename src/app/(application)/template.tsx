@@ -45,19 +45,20 @@ export default function RootLayout({
     setShowSidebar(userProfile); // Toggle sidebar visibility based on userProfile state
     setShowHeader(userProfile); // Toggle header visibility based on userProfile state
   }
-  const userid = session.user.email;
+
+  const userid = session?.user?.email;
   const { data: normalLinksData, loading: normalLinksLoading } =
     UseNormalLinks(userid);
   const { data: socialLinksData, loading: socialLinksLoading } =
     UseSocialLinks(userid);
   const { data: appearanceData, loading: appearanceLoading } =
     useAppearanceData(userid);
-  const { data: videoLinksData, loading: videoLinkLoading } = 
-  UseVideoLinks(userid);
+  const { data: videoLinksData, loading: videoLinkLoading } =
+    UseVideoLinks(userid);
   const { data: productLinksData, loading: productLinkLoading } =
     UseProductLinks(userid);
-  const { data: settingData, loading: settingLoading } = 
-  useSettingData(userid);
+  const { data: settingData, loading: settingLoading } =
+    useSettingData(userid);
 
   const currentUser = {
     name: session?.user?.name || "",
@@ -68,11 +69,11 @@ export default function RootLayout({
   useEffect(() => {
     setLoading(
       normalLinksLoading ||
-        socialLinksLoading ||
-        appearanceLoading ||
-        videoLinkLoading ||
-        settingLoading ||
-        productLinkLoading
+      socialLinksLoading ||
+      appearanceLoading ||
+      videoLinkLoading ||
+      settingLoading ||
+      productLinkLoading
     );
   }, [
     normalLinksLoading,
@@ -82,6 +83,14 @@ export default function RootLayout({
     settingLoading,
     productLinkLoading,
   ]);
+
+  if (status === "loading") {
+    return <Loading />;
+  }
+
+  if (!session) {
+    return <div>Please log in to view this page.</div>;
+  }
 
   return (
     <ThemeProvider enableSystem={true} attribute="class">

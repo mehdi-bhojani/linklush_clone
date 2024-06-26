@@ -34,7 +34,6 @@ const TheLink: React.FC<TheLinkProps> = ({
   onDelete,
   onUpdate,
 }) => {
-   
   const [dialogueOpen, setDialogueOpen] = React.useState(false);
   const handleCopy = async () => {
     await copy(normalLinks.linkUrl);
@@ -49,8 +48,8 @@ const TheLink: React.FC<TheLinkProps> = ({
               <div className="flex items-center w-1/10">
                 <GripVertical />
               </div>
-              <div className="flex items-center w-1/10 flex-shrink">
-                <Avatar>
+              <div className="flex items-center w-3/10 flex-shrink">
+                <Avatar className="flex justify-center items-center">
                   <AvatarImage src={(normalLinks.avatarUrl!=null && normalLinks.avatarUrl!=undefined)? `/avatars/${normalLinks.avatarUrl}` : "" } />
                   <AvatarFallback>{normalLinks.title.charAt(0)}</AvatarFallback>
                 </Avatar>
@@ -108,12 +107,16 @@ const TheLink: React.FC<TheLinkProps> = ({
           <div className="flex flex-row gap-3 items-center">
             <MousePointerClick color="#6B7280" strokeWidth={1} />
             <span>
-              <span className="font-semibold">Clicks:</span> {normalLinks.click || 0}
+              <span className="font-semibold">Clicks:</span>{" "}
+              {normalLinks.click || 0}
             </span>
             <span>
-              <span className="font-semibold">CTR:</span> {normalLinks.clickThroughRate || 0}%
+              <span className="font-semibold">CTR:</span>{" "}
+              {normalLinks.clickThroughRate || 0}%
             </span>
-            {!normalLinks.enabled && <ToggleLeft color="#6B7280" strokeWidth={1} />}
+            {!normalLinks.enabled && (
+              <ToggleLeft color="#6B7280" strokeWidth={1} />
+            )}
           </div>
         </div>
       </div>
@@ -125,6 +128,6 @@ const TheLink: React.FC<TheLinkProps> = ({
       />
     </div>
   );
-}
+};
 
 export default TheLink;

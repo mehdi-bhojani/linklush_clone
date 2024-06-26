@@ -74,7 +74,7 @@ const TheDialog: React.FC<ChildComponentProps> = ({ onCreate }) => {
     console.log(values);
     const newLink = {
       linkUrl: values.normalLink,
-      title: "Mehdi Bhojani",
+      title: "Untitled",
     }
     onCreate(newLink);
     setDialogOpen(false);

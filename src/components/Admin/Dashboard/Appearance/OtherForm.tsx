@@ -28,10 +28,6 @@ export const OtherForm:React.FC<otherProps> = (props) => {
   const [color, setColor] = useState("#fff");
   const [updateDiabled, setUpdateDisabled] = useState(true);
 
-  // useEffect(()=>{
-  //   ((data as any)[0]?.bgColor!=undefined)? setColor((data as any)[0].bgColor) : '';
-  //   ((data as any)[0]?.bgImage != "" && (data as any)[0]?.bgImage != undefined) ? setPreviewUrl('/backgrounds/'+(data as any)[0]?.bgImage) : "";
-  // },[data]);
   useEffect(()=>{
     (props.appearance?.bgColor!=undefined)? setColor(props.appearance.bgColor) : '';
     (props.appearance?.bgImage != "" && props.appearance?.bgImage != undefined) ? setPreviewUrl('/backgrounds/'+props.appearance?.bgImage) : "";
@@ -44,8 +40,17 @@ export const OtherForm:React.FC<otherProps> = (props) => {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (file && file.name != appearance.bgImage) {
+    if(file==null){
+      const newAppearance = {
+        ...appearance,
+        bgImage: null,
+        lastbackground: "color",
+      };
+      props.updateAppearance(newAppearance);
+      setUpdateDisabled(true);
+      return;
+    }
+    else if (file && file.name != appearance.bgImage) {
       const data = new FormData();
       data.set("file", file);
 

@@ -25,7 +25,7 @@ import { Spinner } from "../ui/spinner";
 import { saveWelcome } from "@/actions/save.welcome";
 import { saveSetting, saveUsername } from "@/actions/save.setting";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const FormSchema = z.object({
   fullname: z.string().min(1, "fullname required"),
@@ -40,6 +40,10 @@ function WellcomeForm() {
   const [loading, setLoading] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
   const router = useRouter();
+  
+  const searchParams = useSearchParams();
+  const userid = searchParams.get("userid");
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -70,14 +74,13 @@ function WellcomeForm() {
     // console.log(values);
     const newValues = {
       ...values,
-       userid: "1234"
+       userid,
     };
     const res1 = await saveWelcome(newValues);
     const res2 = await saveUsername({userid: "1234", userName: values.username});
     toast.success("Welcome to our website");
     router.push("/admin");
   };
-
 
   return (
     <Form {...form}>

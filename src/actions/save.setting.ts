@@ -15,8 +15,8 @@ export const saveSetting = async (toSetting: ISetting): Promise<ISetting | null>
       if (findSetting) {
         //if chnaging username only check if it already exists
         if (findSetting.userName !== userName) {
-          const allUserNames = await Setting.find({ userName });
-          if (allUserNames.length > 0) {
+          const allUserNames = await Setting.findOne({ userName });
+          if (allUserNames) {
             console.log("Username already exists:", userName);
             throw new Error("Username already exists");
             // return JSON.parse(JSON.stringify({message: "Username already exists"}));
