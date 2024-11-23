@@ -4,8 +4,6 @@ env:
   variables:
     NODE_ENV: "production"
   export:
-    # Exporting environment variables from a file
-    # Create a file in CodeBuild with these variables
     secrets-manager:
       MONGODB_URI: "YourSecretsManagerKey:MONGODB_URI"
       NEXTAUTH_SECRET: "YourSecretsManagerKey:NEXTAUTH_SECRET"
@@ -21,6 +19,8 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
+      - echo "Navigating to the project directory..."
+      - cd linklush_clone
       - echo "Installing dependencies with PNPM..."
       - corepack enable
       - corepack prepare pnpm@latest --activate
@@ -28,20 +28,21 @@ phases:
   build:
     commands:
       - echo "Building the Next.js project..."
+      - cd linklush_clone
       - pnpm build
   post_build:
     commands:
       - echo "Build completed."
       - echo "Contents of the build directory:"
-      - ls -la .next/
+      - ls -la ./linklush_clone/.next/
 
 artifacts:
   files:
     - '**/*'
   discard-paths: no
-  base-directory: .next
+  base-directory: linklush_clone/.next
 
 cache:
   paths:
-    - "node_modules/**/*"
-    - ".pnpm-store/**/*"
+    - "linklush_clone/node_modules/**/*"
+    - "linklush_clone/.pnpm-store/**/*"
